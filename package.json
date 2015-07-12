@@ -8,11 +8,8 @@
   },
   "dependencies": {
     "express": "~4.9.x",
-<<<<<<< HEAD
     "flickrapi": "^0.3.32"
-=======
     "twitter-node-client": "0.0.6"
->>>>>>> 28038921413e7febc6bb01e06b4f02b0ff8272ba
   },
   "engines": {
     "node": "0.12.2"
