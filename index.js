@@ -10,7 +10,9 @@ var express = require('express');
 var app = express();
 var Twitter = require('twitter-node-client').Twitter;
 var Flickr = require("flickrapi");
+var config = require('./config.json');
 
+console.log(config);
 app.set('port', (process.env.PORT || 5000));
 app.use(express.static(__dirname + '/public'));
 
@@ -43,8 +45,8 @@ var tweets = {};
     };
 
     var flickrOptions = {
-      api_key: "d2e3db77d30f0c33b2b1f174f70833d1",
-      secret: "30850763566d311f"
+      api_key: config.flickrkey,
+      secret: config.flickrsecret
     };
 
     Flickr.tokenOnly(flickrOptions, function(error, flickr) {
@@ -59,14 +61,14 @@ var tweets = {};
                 photo.server + "/"+ photo.id + "_" + photo.secret + ".jpg";
                 imageUrls[count] = url;
                 }
-            console.log(imageUrls);s
+            console.log(imageUrls);
             });
     });
 
     //Get this data from your twitter apps dashboard
     var config = {
-        "consumerKey": "k1pfjLFmJkT2WKt5IEeOMTpXR",
-        "consumerSecret": "yyEn9IsMQKXnbP8RFWBRAaIz04NaOz6LKnsp5anp6GIPj1PUrA",
+        "consumerKey": config.twitterkey,
+        "consumerSecret": config.twittersecret,
     };
     var twitter = new Twitter(config);
     //pull in 100 tweets excluding rts and replies
