@@ -2,6 +2,7 @@
 <html>
   <head>
     <title>Template</title>
+    <script src="http://code.jquery.com/jquery.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
@@ -11,7 +12,6 @@
 
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-    <script src="http://code.jquery.com/jquery.js"></script>
   </head>
   <body>
     <div class="container">
@@ -24,12 +24,16 @@
             <label class="sr-only" for="exampleInputAmount">Enter twitter username</label>
               <div class="input-group">
                 <div class="input-group-addon">@</div>
-                <input type="text" class="form-control" id="userName" placeholder="officaljaden">
+                <input type="text" class="form-control" id="userName" value="officaljaden">
               </div>
           </div>
-          <button type="submit" class="btn btn-primary">Search</button>
+          <button type="submit" class="btn btn-primary" onclick="searchTweets()">Search</button>
         </form>
       </div>
     </div>
-
+<script>
+  function searchTweets(){
+    alert("submit clicked");
+  }
+</script>
 </html>
