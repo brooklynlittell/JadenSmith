@@ -12,7 +12,6 @@ var Twitter = require('twitter-node-client').Twitter;
 var Flickr = require("flickrapi");
 var config = require('./config.json');
 
-console.log(config);
 app.set('port', (process.env.PORT || 5000));
 app.use(express.static(__dirname + '/public'));
 
