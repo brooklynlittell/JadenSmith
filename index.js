@@ -2,76 +2,70 @@
 Calls the flickr/twitter apis for 100 responses
 Flicker api returns url of image
 Twitter url returns tweet/popularity
-Note: flickr/twitter api functions are asynch, and should use callbacks
+Note: insta/twitter api functions are asynch, and should use callbacks
 if need to make sure function has completed
 **/
 
 var express = require('express');
 var app = express();
 var Twitter = require('twitter-node-client').Twitter;
-var Flickr = require("flickrapi");
 var config = require('./config.json');
+var ig = require('instagram-node').instagram();
+
 
 app.set('port', (process.env.PORT || 5000));
 app.use(express.static(__dirname + '/public'));
 
-app.get('/', function(request, response) {
-  response.send('Hello World!');
-});
-
 app.listen(app.get('port'), function() {
   console.log('Node app is running on port', app.get('port'));
 });
-// array of urls for nature images from 0-99
+
+
+
+// todo pull these out to a model
 var imageUrls = [];
-//map of tweets->popularity
 var tweets = {};
- //Callback functions
-    var error = function (err, response, body) {
-        console.log('ERROR [%s]', err);
-    };
-    var success = function (data) {
-        // make response pretty
-        data = JSON.parse(data);
-        for(tweet in data){
-            // ignore tweets with a URL in it
-            if(data[tweet].text.indexOf("http") == -1){
-                // map text -> count (weight can be used later to pull good tweets)
-                tweets[data[tweet].text] = data[tweet].retweet_count + data[tweet].favorite_count;
-            } 
-        }
-        console.log(tweets);
-    };
 
-    var flickrOptions = {
-      api_key: config.flickrkey,
-      secret: config.flickrsecret
-    };
+//Get this data from your twitter apps dashboard
+var conf = {
+    "consumerKey": config.twitterkey,
+    "consumerSecret": config.twittersecret,
+};
 
-    Flickr.tokenOnly(flickrOptions, function(error, flickr) {
-        var imageUrls = [];
-        flickr.photos.search({
-            text: "nature", page: 1}, function(err, result) {
-            if(err) { throw new Error(err); }
-            // do something with result
-            for (count in result.photos.photo){
-                photo = result.photos.photo[count];
-                var url = "https://farm" + photo.farm + ".staticflickr.com/" +
-                photo.server + "/"+ photo.id + "_" + photo.secret + ".jpg";
-                imageUrls[count] = url;
-                }
-            console.log(imageUrls);
-            });
+var twitter = new Twitter(conf);
+//pull in 100 tweets excluding rts and replies
+var username = 'officialjaden'
+twitter.getUserTimeline({ screen_name: username, count: '100',
+    exclude_replies: true, include_rts: false}, error, success);
+var error = function (err, response, body) {
+    console.log('ERROR [%s]', err);
+};
+var success = function (data) {
+    // make response pretty
+    data = JSON.parse(data);
+    for(tweet in data){
+        // ignore tweets with a URL in it
+        if(data[tweet].text.indexOf("http") == -1){
+            // map text -> count (weight can be used later to pull good tweets)
+            tweets[data[tweet].text] = data[tweet].retweet_count + data[tweet].favorite_count;
+        } 
+        app.get('/tweets', function(request, response) {
+            response.send(tweets);
+        });
+    }
+};
+
+//getting images
+ig.use({client_id: config.instagramkey, client_secret: config.instagramsecret});
+ig.tag_media_recent('nature', function(err, medias, pagination, remaining, limit) {
+     if(err) { throw new Error(err); }
+     for(photo in medias){
+        imageUrls[photo] = medias[photo].images.standard_resolution.url;
+     }
+     app.get('/images', function(request, response) {
+        response.send(imageUrls);
     });
+});
 
-    //Get this data from your twitter apps dashboard
-    var config = {
-        "consumerKey": config.twitterkey,
-        "consumerSecret": config.twittersecret,
-    };
-    var twitter = new Twitter(config);
-    //pull in 100 tweets excluding rts and replies
-    var username = 'officialjaden'
-    twitter.getUserTimeline({ screen_name: username, count: '100',
-        exclude_replies: true, include_rts: false}, error, success);
+
 
