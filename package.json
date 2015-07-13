@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "express": "~4.9.x",
+    "flickrapi": "^0.3.32",
     "twitter-node-client": "0.0.6"
   },
   "engines": {
