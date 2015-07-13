@@ -35,8 +35,6 @@ var conf = {
 var twitter = new Twitter(conf);
 //pull in 100 tweets excluding rts and replies
 var username = 'officialjaden'
-twitter.getUserTimeline({ screen_name: username, count: '100',
-    exclude_replies: true, include_rts: false}, error, success);
 var error = function (err, response, body) {
     console.log('ERROR [%s]', err);
 };
@@ -54,7 +52,8 @@ var success = function (data) {
         });
     }
 };
-
+twitter.getUserTimeline({ screen_name: username, count: '100',
+    exclude_replies: true, include_rts: false}, error, success);
 //getting images
 ig.use({client_id: config.instagramkey, client_secret: config.instagramsecret});
 ig.tag_media_recent('nature', function(err, medias, pagination, remaining, limit) {
