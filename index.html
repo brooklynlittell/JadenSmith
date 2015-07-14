@@ -23,7 +23,7 @@
     <div class="container">
       <div class="row">
         <div class="span12">
-          <h1>Cool Html Template!</h1>
+          <h1>Hi brandon. Hit search to start.</h1>
         </div>
         <form class="form-inline">
           <div class="form-group">
@@ -44,6 +44,7 @@
             <button type="button" class="btn btn-primary" id ="justifyCenter">Center</button>
             <button type="button" class="btn btn-primary" id ="justifyRight">Right</button>
           </div>
+          <button type="button" class="btn btn-primary" id ="download">Download</button>
         </div>
         <br>
       </div>
@@ -78,6 +79,11 @@ $('#justifyCenter').click(function(){
   $("#justifyRight").attr('class', 'btn btn-primary');
   $("#justifyCenter").attr('class', 'btn btn-primary active');
 });
+//not optimal but works
+$('#download').click(function(){
+  var dataURL = document.getElementById("myCanvas").toDataURL('image/png');
+  window.location.href=dataURL;
+})
 
 
 var ImageGenerator = new Object();
@@ -94,33 +100,35 @@ ImageGenerator.init = function(tweetText, authorText, imageSrc) {
 ImageGenerator.generate = function(justify) {
   var _this = this;
   _this.imageObj = new Image();
+  _this.imageObj.crossOrigin="anonymous";
   this.imageObj.onload = function(){
-    _this.context.drawImage(_this.imageObj, 0, 0, _this.imageWidth, _this.imageHeight);
-    _this.context.font = "30px Georgia";
-    _this.context.fillStyle = "white";
+  _this.context.drawImage(_this.imageObj, 0, 0, _this.imageWidth, _this.imageHeight);
+  _this.context.font = "30px Georgia";
+  _this.context.fillStyle = "white";
 
     // Write Text
-    wrapText(_this.context, _this.tweetText, _this.textPadding, 60, _this.imageWidth - (_this.textPadding * 2), 35, justify);
-    var authorSize = _this.context.measureText(_this.authorText)
-    var width = 400 - authorSize.width - (_this.textPadding);
-    _this.context.fillText(_this.authorText, width, 380);
-  };
-  
+  wrapText(_this.context, _this.tweetText, _this.textPadding, 60, _this.imageWidth - (_this.textPadding * 2), 35, justify);
+  var authorSize = _this.context.measureText(_this.authorText)
+  var width = 400 - authorSize.width - (_this.textPadding);
+  _this.context.fillText(_this.authorText, width, 380);
+};
+
   _this.imageObj.src = _this.imageSrc; 
 }
 
 //todo: have some sort of stack to pull new images from
 ImageGenerator.updateImage = function(){
   var _this = this;
-  _this.imageObj.src = "https://scontent.cdninstagram.com/hphotos-xtp1/t51.2885-15/s640x640/e35/sh0.08/10518180_382047678671810_695688240_n.jpg"
+  _this.imageObj.src = "https://scontent.cdninstagram.com/hphotos-xaf1/t51.2885-15/e15/11348292_1639969832907684_1002339914_n.jpg"
+  _this.imageSrc = _this.imageObj.src;
 }
 
 function addImage(username){
   var newImageButton = '';
   $("body").after(newImageButton);
-  var tweet = "Wishing you weren't dutch? #itsbecauseurdutch";
-  var user = "@imjen";
-  var image = "https://scontent.cdninstagram.com/hphotos-xfa1/t51.2885-15/s640x640/e35/sh0.08/11355905_1618613161745444_1921259379_n.jpg";
+  var tweet = "Shia Labeouf Is Life.";
+  var user = "@officaljaden";
+  var image = "https://scontent.cdninstagram.com/hphotos-xfa1/t51.2885-15/e15/11380190_955897017766892_1301000394_n.jpg";
 
   ImageGenerator.init(tweet, user, image);
   ImageGenerator.generate("LEFT");
