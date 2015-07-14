@@ -55,9 +55,9 @@
       </div>
     </div>
 <script>
-var LEFT = true;
-var RIGHT = false;
+// start out with bottom section hidden
 $('#images').hide();
+
 $('#searchButton').click(function(){
   addImage($("#userName").val());
   $('#images').show();
@@ -65,6 +65,7 @@ $('#searchButton').click(function(){
 $('#newImage').click(function(){
   ImageGenerator.updateImage();
 });
+//fancy button things
 $('#justifyRight').click(function(){
   ImageGenerator.generate("RIGHT");
   $("#justifyLeft").attr('class', 'btn btn-primary');
@@ -108,21 +109,22 @@ ImageGenerator.generate = function(justify) {
   this.imageObj.src = _this.imageSrc; 
   this.imageObj.onload = function(){
     _this.context.drawImage(_this.imageObj, 0, 0, _this.imageWidth, _this.imageHeight);
-    var fontSize = 80 - (_this.tweetText.length /2);
-    _this.context.font = fontSize + "px Georgia";
+    // not perfect formula...
+    var fontSize = 80 - (_this.tweetText.length / 2.5);
+    var fonts = ["Arial", "Georgia", "Times New Roman"];
+    var font = fonts[Math.floor(Math.random() * fonts.length)];
+    _this.context.font = fontSize + "px " + font;
     _this.context.strokeStyle = getInverseColor(_this.canvas);
     _this.context.fillStyle = "white";
 
       // Write Text
     wrapText(_this.context, _this.tweetText, _this.textPadding, 60, _this.imageWidth - (_this.textPadding * 2), fontSize, justify);
-     _this.context.font = "30px Georgia";
+     _this.context.font = "30px " + font;
     var authorSize = _this.context.measureText(_this.authorText)
     var width = 400 - authorSize.width - (_this.textPadding);
-    _this.context.lineWidth = 2.5;
-    //_this.context.stroke();
+    // super non precise formula
+    _this.context.lineWidth = fontSize /30;
     _this.context.fillText(_this.authorText, width, 380);
-    //_this.context.strokeText(_this.authorText, width, 380);
-
   };
 
   _this.imageObj.src = _this.imageSrc; 
@@ -131,17 +133,14 @@ ImageGenerator.generate = function(justify) {
 //todo: have some sort of stack to pull new images from
 ImageGenerator.updateImage = function(){
   var _this = this;
-  _this.context.clearRect(0, 0 ,_this.imageWidth, _this.imageHeight);
-
   _this.imageSrc = ImageStack.getImage();
   _this.imageObj.src = _this.imageSrc; 
-  //ImageGenerator.generate("LEFT");
 }
 
 function addImage(username){
   var newImageButton = '';
   $("body").after(newImageButton);
-  var tweet = "Jaden Jaden Let Me Twerk On You ONE Time";
+  var tweet = "How Can Mirrors Be Real If Our Eyes Aren't Real";
   var user = "@officialjaden";
   var image = ImageStack.getImage();
 
