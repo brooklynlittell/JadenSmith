@@ -35,11 +35,17 @@
           </div>
           <button type="button" class="btn btn-primary" id ="searchButton">Search</button>
         </form>
-        <canvas id="myCanvas" width="400" height="400"></canvas>
+        <div id = "images">
+          <canvas id="myCanvas" width="400" height="400"></canvas>
+          <br>
+          <button type="button" class="btn btn-primary" id ="newImage">New Image</button>
+        </div>
+        <br>
       </div>
     </div>
 
 <script>
+$('#images').hide();
 var ImageGenerator = new Object();
 ImageGenerator.init = function() {
   this.canvas = document.getElementById("myCanvas");
@@ -60,15 +66,20 @@ ImageGenerator.generate = function(tweetText, authorText, imageSrc) {
     wrapText(_this.context, tweetText, _this.textPadding, 60, _this.imageWidth - (_this.textPadding * 2), 35);
     var authorSize = _this.context.measureText(authorText)
     var width = 400 - authorSize.width - 10;
-    console.log(width);
     _this.context.fillText(authorText, width, 380);
   };
   
   _this.imageObj.src = imageSrc; 
 }
+//todo: have some sort of stack to pull new images from
+ImageGenerator.updateImage = function(){
+  var _this = this;
+  _this.imageObj.src = "https://scontent.cdninstagram.com/hphotos-xtp1/t51.2885-15/s640x640/e35/sh0.08/10518180_382047678671810_695688240_n.jpg"
+}
 
 function addImage(username){
-  console.log(username);
+  var newImageButton = '';
+  $("body").after(newImageButton);
   var tweet = "Wishing you weren't dutch? #itsbecauseurdutch";
   var user = "@imjen";
   var image = "https://scontent.cdninstagram.com/hphotos-xfa1/t51.2885-15/s640x640/e35/sh0.08/11355905_1618613161745444_1921259379_n.jpg";
@@ -98,6 +109,11 @@ function wrapText(context, text, x, y, maxWidth, lineHeight) {
 }
 $('#searchButton').click(function(){
   addImage($("#userName").val());
+  $('#images').show();
+
+});
+$('#newImage').click(function(){
+  ImageGenerator.updateImage();
 });
 </script>
 </body>
