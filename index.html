@@ -1,6 +1,8 @@
+<!DOCTYPE html>
 <html>
   <head>
-    <title>Template</title>
+    <meta charset="utf-8">
+    <title>JadenSmith</title>
     <script src="http://code.jquery.com/jquery.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Latest compiled and minified CSS -->
@@ -22,7 +24,7 @@
     <div class="container">
       <div class="row">
         <div class="span12">
-    <canvas id="myCanvas" width="578" height="400"></canvas>
+          <canvas id="myCanvas" width="400" height="400"></canvas>
           <h1>Cool Html Template!</h1>
         </div>
         <form class="form-inline">
@@ -38,28 +40,58 @@
       </div>
     </div>
 <script>
+var imageHeight = 400;
+var imageWidth = 400;
+var textPadding = 20;
+var image = "https://scontent.cdninstagram.com/hphotos-xfa1/t51.2885-15/s640x640/e35/sh0.08/11355905_1618613161745444_1921259379_n.jpg";
+
+var ImageGenerator = new Object();
+ImageGenerator.init = function() {
+  this.canvas = document.getElementById("myCanvas");
+  this.context = this.canvas.getContext("2d");
+}
+ImageGenerator.generate = function(tweetText, authorText, imageSrc) {
+  var _this = this;
+  _this.imageObj = new Image();
+  this.imageObj.onload = function(){
+    _this.context.drawImage(_this.imageObj, 0, 0, imageHeight, imageWidth);
+    _this.context.font = "30px Georgia";
+    _this.context.fillStyle = "white";
+
+    // Write Text
+    wrapText(_this.context, tweetText, textPadding, 60, imageWidth - (textPadding * 2), 35);
+    _this.context.fillText(authorText, 40, 350);
+  };
+  
+  _this.imageObj.src = imageSrc; 
+}
+
 //TODO should be triggered by search
 window.onload = function(){
- var canvas = document.getElementById("myCanvas");
- var context = canvas.getContext("2d");
- var imageObj = new Image();
- // TODO text/user should be passed in to the function
- var text = "Wishing you weren't dutch?"
- var line2 = " #itsbecauseurdutch"
- var user = "@brandon_littell"
- imageObj.onload = function(){
-    // why don't images look square?
-    context.drawImage(imageObj, 0, 0, 610, 610);
-    context.font = "30px Georgia";
-    context.fillStyle = "white";
-    //TODO automatic text wrapping
-    context.fillText(text, 20, 100);
-    context.fillText(line2, 0, 148);
-    context.fillText(user, 250, 350);
- };
- //param passed in
- imageObj.src = "https://scontent.cdninstagram.com/hphotos-xfa1/t51.2885-15/s640x640/e35/sh0.08/11355905_1618613161745444_1921259379_n.jpg"; 
+  ImageGenerator.init();
+  ImageGenerator.generate("Wishing you weren't dutch? #itsbecauseurdutch", "@brandon_littell", image);
 };
+
+// From: http://www.html5canvastutorials.com/tutorials/html5-canvas-wrap-text-tutorial/
+function wrapText(context, text, x, y, maxWidth, lineHeight) {
+  var words = text.split(' ');
+  var line = '';
+
+  for(var n = 0; n < words.length; n++) {
+    var testLine = line + words[n] + ' ';
+    var metrics = context.measureText(testLine);
+    var testWidth = metrics.width;
+    if (testWidth > maxWidth && n > 0) {
+      context.fillText(line, x, y);
+      line = words[n] + ' ';
+      y += lineHeight;
+    }
+    else {
+      line = testLine;
+    }
+  }
+  context.fillText(line, x, y);
+}
 
 </script>
 </html>
