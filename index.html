@@ -39,22 +39,59 @@
           <canvas id="myCanvas" width="400" height="400"></canvas>
           <br>
           <button type="button" class="btn btn-primary" id ="newImage">New Image</button>
+          <div class="btn-group" role="group" aria-label="...">
+            <button type="button" class="btn btn-primary active" id ="justifyLeft">Left</button>
+            <button type="button" class="btn btn-primary" id ="justifyCenter">Center</button>
+            <button type="button" class="btn btn-primary" id ="justifyRight">Right</button>
+          </div>
         </div>
         <br>
       </div>
     </div>
 
 <script>
+var LEFT = true;
+var RIGHT = false;
 $('#images').hide();
+$('#searchButton').click(function(){
+  addImage($("#userName").val());
+  $('#images').show();
+});
+$('#newImage').click(function(){
+  ImageGenerator.updateImage();
+});
+$('#justifyRight').click(function(){
+  ImageGenerator.generate("RIGHT");
+  $("#justifyLeft").attr('class', 'btn btn-primary');
+  $("#justifyRight").attr('class', 'btn btn-primary active');
+  $("#justifyCenter").attr('class', 'btn btn-primary');
+});
+$('#justifyLeft').click(function(){
+  ImageGenerator.generate("LEFT");
+  $("#justifyLeft").attr('class', 'btn btn-primary active');
+  $("#justifyRight").attr('class', 'btn btn-primary');
+  $("#justifyCenter").attr('class', 'btn btn-primary');
+});
+$('#justifyCenter').click(function(){
+  ImageGenerator.generate("CENTER");
+  $("#justifyLeft").attr('class', 'btn btn-primary');
+  $("#justifyRight").attr('class', 'btn btn-primary');
+  $("#justifyCenter").attr('class', 'btn btn-primary active');
+});
+
+
 var ImageGenerator = new Object();
-ImageGenerator.init = function() {
+ImageGenerator.init = function(tweetText, authorText, imageSrc) {
   this.canvas = document.getElementById("myCanvas");
   this.context = this.canvas.getContext("2d");
   this.imageWidth = 400;
   this.imageHeight = 400;
   this.textPadding = 20;
+  this.tweetText = tweetText;
+  this.authorText = authorText;
+  this.imageSrc = imageSrc;
 }
-ImageGenerator.generate = function(tweetText, authorText, imageSrc) {
+ImageGenerator.generate = function(justify) {
   var _this = this;
   _this.imageObj = new Image();
   this.imageObj.onload = function(){
@@ -63,14 +100,15 @@ ImageGenerator.generate = function(tweetText, authorText, imageSrc) {
     _this.context.fillStyle = "white";
 
     // Write Text
-    wrapText(_this.context, tweetText, _this.textPadding, 60, _this.imageWidth - (_this.textPadding * 2), 35);
-    var authorSize = _this.context.measureText(authorText)
-    var width = 400 - authorSize.width - 10;
-    _this.context.fillText(authorText, width, 380);
+    wrapText(_this.context, _this.tweetText, _this.textPadding, 60, _this.imageWidth - (_this.textPadding * 2), 35, justify);
+    var authorSize = _this.context.measureText(_this.authorText)
+    var width = 400 - authorSize.width - (_this.textPadding);
+    _this.context.fillText(_this.authorText, width, 380);
   };
   
-  _this.imageObj.src = imageSrc; 
+  _this.imageObj.src = _this.imageSrc; 
 }
+
 //todo: have some sort of stack to pull new images from
 ImageGenerator.updateImage = function(){
   var _this = this;
@@ -84,20 +122,19 @@ function addImage(username){
   var user = "@imjen";
   var image = "https://scontent.cdninstagram.com/hphotos-xfa1/t51.2885-15/s640x640/e35/sh0.08/11355905_1618613161745444_1921259379_n.jpg";
 
-  ImageGenerator.init();
-  ImageGenerator.generate(tweet, user, image);
+  ImageGenerator.init(tweet, user, image);
+  ImageGenerator.generate("LEFT");
 }
 // From: http://www.html5canvastutorials.com/tutorials/html5-canvas-wrap-text-tutorial/
-function wrapText(context, text, x, y, maxWidth, lineHeight) {
+function wrapText(context, text, x, y, maxWidth, lineHeight, justify) {
   var words = text.split(' ');
   var line = '';
-
   for(var n = 0; n < words.length; n++) {
     var testLine = line + words[n] + ' ';
     var metrics = context.measureText(testLine);
     var testWidth = metrics.width;
     if (testWidth > maxWidth && n > 0) {
-      context.fillText(line, x, y);
+      context.fillText(line, getX(justify, x, line, context), y);
       line = words[n] + ' ';
       y += lineHeight;
     }
@@ -105,16 +142,19 @@ function wrapText(context, text, x, y, maxWidth, lineHeight) {
       line = testLine;
     }
   }
-  context.fillText(line, x, y);
+  context.fillText(line, getX(justify, x, line, context), y);
 }
-$('#searchButton').click(function(){
-  addImage($("#userName").val());
-  $('#images').show();
+function getX(justify, x, line, context){
+  switch(justify){
+    case "LEFT":
+      return x;  
+    case "RIGHT":
+      return ImageGenerator.imageWidth - x - context.measureText(line).width;         
+    case "CENTER":
+      return (ImageGenerator.imageWidth - x - context.measureText(line).width) / 2;      
+    }
+  }
 
-});
-$('#newImage').click(function(){
-  ImageGenerator.updateImage();
-});
 </script>
 </body>
 </html>
