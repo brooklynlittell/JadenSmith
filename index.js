@@ -56,7 +56,7 @@ twitter.getUserTimeline({ screen_name: username, count: '100',
     exclude_replies: true, include_rts: false}, error, success);
 //getting images
 ig.use({client_id: config.instagramkey, client_secret: config.instagramsecret});
-ig.tag_media_recent('nature', function(err, medias, pagination, remaining, limit) {
+ig.tag_media_recent('chasing_fog', function(err, medias, pagination, remaining, limit) {
      if(err) { throw new Error(err); }
      for(photo in medias){
         imageUrls[photo] = medias[photo].images.standard_resolution.url;
