@@ -59,7 +59,10 @@ ImageGenerator.generate = function(tweetText, authorText, imageSrc) {
 
     // Write Text
     wrapText(_this.context, tweetText, _this.textPadding, 60, _this.imageWidth - (_this.textPadding * 2), 35);
-    _this.context.fillText(authorText, 40, 350);
+    var authorSize = _this.context.measureText(authorText)
+    var width = 400 - authorSize.width - 10;
+    console.log(width);
+    _this.context.fillText(authorText, width, 380);
   };
   
   _this.imageObj.src = imageSrc; 
@@ -68,7 +71,7 @@ ImageGenerator.generate = function(tweetText, authorText, imageSrc) {
 //TODO should be triggered by search
 window.onload = function(){
   var tweet = "Wishing you weren't dutch? #itsbecauseurdutch";
-  var user = "@brandon_littell";
+  var user = "@imjen";
   var image = "https://scontent.cdninstagram.com/hphotos-xfa1/t51.2885-15/s640x640/e35/sh0.08/11355905_1618613161745444_1921259379_n.jpg";
 
   ImageGenerator.init();
