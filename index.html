@@ -39,27 +39,26 @@
         </form>
       </div>
     </div>
-<script>
-var imageHeight = 400;
-var imageWidth = 400;
-var textPadding = 20;
-var image = "https://scontent.cdninstagram.com/hphotos-xfa1/t51.2885-15/s640x640/e35/sh0.08/11355905_1618613161745444_1921259379_n.jpg";
 
+<script>
 var ImageGenerator = new Object();
 ImageGenerator.init = function() {
   this.canvas = document.getElementById("myCanvas");
   this.context = this.canvas.getContext("2d");
+  this.imageWidth = 400;
+  this.imageHeight = 400;
+  this.textPadding = 20;
 }
 ImageGenerator.generate = function(tweetText, authorText, imageSrc) {
   var _this = this;
   _this.imageObj = new Image();
   this.imageObj.onload = function(){
-    _this.context.drawImage(_this.imageObj, 0, 0, imageHeight, imageWidth);
+    _this.context.drawImage(_this.imageObj, 0, 0, _this.imageWidth, _this.imageHeight);
     _this.context.font = "30px Georgia";
     _this.context.fillStyle = "white";
 
     // Write Text
-    wrapText(_this.context, tweetText, textPadding, 60, imageWidth - (textPadding * 2), 35);
+    wrapText(_this.context, tweetText, _this.textPadding, 60, _this.imageWidth - (_this.textPadding * 2), 35);
     _this.context.fillText(authorText, 40, 350);
   };
   
@@ -68,8 +67,12 @@ ImageGenerator.generate = function(tweetText, authorText, imageSrc) {
 
 //TODO should be triggered by search
 window.onload = function(){
+  var tweet = "Wishing you weren't dutch? #itsbecauseurdutch";
+  var user = "@brandon_littell";
+  var image = "https://scontent.cdninstagram.com/hphotos-xfa1/t51.2885-15/s640x640/e35/sh0.08/11355905_1618613161745444_1921259379_n.jpg";
+
   ImageGenerator.init();
-  ImageGenerator.generate("Wishing you weren't dutch? #itsbecauseurdutch", "@brandon_littell", image);
+  ImageGenerator.generate(tweet, user, image);
 };
 
 // From: http://www.html5canvastutorials.com/tutorials/html5-canvas-wrap-text-tutorial/
@@ -94,4 +97,5 @@ function wrapText(context, text, x, y, maxWidth, lineHeight) {
 }
 
 </script>
+</body>
 </html>
