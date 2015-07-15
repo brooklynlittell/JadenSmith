@@ -11,8 +11,9 @@ var app = express();
 var Twitter = require('twitter-node-client').Twitter;
 var config = require('./config.json');
 var ig = require('instagram-node').instagram();
+var cors = require('cors')
 
-
+app.use(cors());
 app.set('port', (process.env.PORT || 5000));
 app.use(express.static(__dirname + '/public'));
 
@@ -23,7 +24,7 @@ app.listen(app.get('port'), function() {
 
 
 // todo pull these out to a model
-var imageUrls = [];
+var imageUrls = {};
 var tweets = {};
 
 //Get this data from your twitter apps dashboard

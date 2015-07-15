@@ -8,10 +8,6 @@
  * Controller of the jadenSmithApp
  */
 angular.module('jadenSmithApp')
-  .controller('AboutCtrl', function () {
-    this.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
-  });
+.controller('GreetingController', ['$scope', function($scope) {
+  $scope.greeting = 'Hola!';
+}]);
