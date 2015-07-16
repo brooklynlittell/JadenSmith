@@ -49,7 +49,9 @@ var success = function (data) {
             tweets[data[tweet].text] = data[tweet].retweet_count + data[tweet].favorite_count;
         } 
         app.get('/tweets', function(request, response) {
-            response.send(tweets);
+            var res = new Object();
+            res.tweets = tweets;
+            response.send(res);
         });
     }
 };
@@ -63,7 +65,9 @@ ig.tag_media_recent('nature', function(err, medias, pagination, remaining, limit
         imageUrls[photo] = medias[photo].images.standard_resolution.url;
      }
      app.get('/images', function(request, response) {
-        response.send(imageUrls);
+        var res = new Object();
+        res.images = imageUrls;
+        response.send(res);
     });
 });
 

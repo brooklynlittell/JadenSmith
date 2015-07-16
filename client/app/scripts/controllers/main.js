@@ -26,14 +26,24 @@ angular.module('jadenSmithApp')
   $scope.newImage = function(){
   	$scope.currentImage++;
   	// Loop images
-  	if($scope.currnetImage >= Object.keys($scope.imageList).length)
+  	if($scope.currentImage >= Object.keys($scope.imageList.images).length)
   	{
   		$scope.currentImage = 0;
   	}
   };
 
+  $scope.newTweet = function(){
+  	$scope.currentTweet++;
+  	// TODO: Fix for tweet structure
+  	// Tweets are listed on a frequency index, not an enumeration
+  	if($scope.currentTweet >= Object.keys($scope.tweetList.tweets).length)
+  	{
+  		$scope.currentTweet = 0;
+  	}
+  };
+
   $scope.generateImage = function(){
-  	
+  	//console.log($scope.imageList.images[$scope.currentImage]);
   };
 
   $scope.onSearchUser = function(){
@@ -49,6 +59,7 @@ angular.module('jadenSmithApp')
   $scope.$on('$viewContentLoaded', function () {
     $scope.imageList = $resource("http://localhost:5000/images").get();
     $scope.getTweets();
+    console.log($scope.imageList);
   });
 });
 
