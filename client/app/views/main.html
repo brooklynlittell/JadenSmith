@@ -6,14 +6,14 @@
         <div class="input-group-addon">@</div>
         <input type="text" class="form-control" id="userName" value="officaljaden">
       </div>
-  <button type="submit" class="btn btn-primary" ng-click="searchTweets()" ng-model="searchButton"> Search</button>
+  <button type="submit" class="btn btn-primary" ng-click="onSearchTweets()" ng-model="searchButton"> Search</button>
   </div>
 </form>
  <div id = "images" ng-show='isSearch'>
           <div id = "image">
             <canvas id="myCanvas" width="400" height="400"></canvas>
             <br>
-            <button type="button" class="btn btn-primary" id ="newImage">New Image</button>
+            <button type="button" class="btn btn-primary" id ="newImage" ng-click="onNewImage()">New Image</button>
             <div class="btn-group" role="group" aria-label="...">
               <button type="button" class="btn btn-primary active" id ="justifyLeft">Left</button>
               <button type="button" class="btn btn-primary" id ="justifyCenter">Center</button>
@@ -22,7 +22,9 @@
             <button type="button" class="btn btn-primary" id ="download">Download</button>
           </div>
         </div>
-          
-{{image}}
-{{tweets}}
+
+{{currentTweet}}
+{{currentImage}} 
+{{imageList}}
+{{tweetList}}
 
