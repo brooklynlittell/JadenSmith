@@ -95,35 +95,35 @@ angular.module('jadenSmithApp')
       _this.context.lineWidth = fontSize /30;
       _this.context.fillText(authorText, width, 380);
     };
-console.log("Generate End");
+    console.log("Generate End");
     _this.imageObj.src = imageSrc; 
   };
 
-// From: http://www.html5canvastutorials.com/tutorials/html5-canvas-wrap-text-tutorial/
-function wrapText(context, text, x, y, maxWidth, lineHeight, justify) {
-  console.log("wrapText");
-  var words = text.split(' ');
-  var line = '';
-  for(var n = 0; n < words.length; n++) {
-    var testLine = line + words[n] + ' ';
-    var metrics = context.measureText(testLine);
-    var testWidth = metrics.width;
-    if (testWidth > maxWidth && n > 0) {
-      context.fillText(line, getX(justify, x, line, context), y);
-      context.strokeText(line, getX(justify, x, line, context), y);
-      line = words[n] + ' ';
-      y += lineHeight;
+  // From: http://www.html5canvastutorials.com/tutorials/html5-canvas-wrap-text-tutorial/
+  function wrapText(context, text, x, y, maxWidth, lineHeight, justify) {
+    console.log("wrapText");
+    var words = text.split(' ');
+    var line = '';
+    for(var n = 0; n < words.length; n++) {
+      var testLine = line + words[n] + ' ';
+      var metrics = context.measureText(testLine);
+      var testWidth = metrics.width;
+      if (testWidth > maxWidth && n > 0) {
+        context.fillText(line, getX(justify, x, line, context), y);
+        context.strokeText(line, getX(justify, x, line, context), y);
+        line = words[n] + ' ';
+        y += lineHeight;
+      }
+      else {
+        line = testLine;
+      }
     }
-    else {
-      line = testLine;
-    }
-  }
-  context.fillText(line, getX(justify, x, line, context), y);
-  context.strokeText(line, getX(justify, x, line, context), y);
+    context.fillText(line, getX(justify, x, line, context), y);
+    context.strokeText(line, getX(justify, x, line, context), y);
 
-}
-function getX(justify, x, line, context){
-  switch(justify){
+  }
+  function getX(justify, x, line, context){
+    switch(justify){
     case "LEFT":
       return x;  
     case "RIGHT":
@@ -132,14 +132,14 @@ function getX(justify, x, line, context){
       return ($scope.ImageGenerator.imageWidth - x - context.measureText(line).width) / 2;      
     }
   }
-function getHex(values){
+  function getHex(values){
     var red = values[0];
     var green = values[1];
     var blue = values[2];
     var rgb = blue | (green << 8) | (red << 16);
     return "#" + rgb.toString(16);
-}
-function invertColor(hexTripletColor) {
+  }
+  function invertColor(hexTripletColor) {
     var color = hexTripletColor;
     color = color.substring(1);           // remove #
     color = parseInt(color, 16);          // convert to integer
@@ -148,18 +148,13 @@ function invertColor(hexTripletColor) {
     color = ("000000" + color).slice(-6); // pad with leading zeros
     color = "#" + color;                  // prepend #
     return color;
-}
-function getInverseColor(canvas){
-  var colorThief = new ColorThief();
-  var color = getHex(colorThief.getColor(canvas));
-  return invertColor(color);
-  //return "white";
-}
-
-
-
-
-
+  }
+  function getInverseColor(canvas){
+    var colorThief = new ColorThief();
+    var color = getHex(colorThief.getColor(canvas));
+    return invertColor(color);
+    //return "white";
+  }
 
   $scope.onSearchUser = function(){
     $scope.getTweets(/*user*/);
@@ -172,11 +167,13 @@ function getInverseColor(canvas){
   };
 
   $scope.$on('$viewContentLoaded', function () {
-    $scope.canvas = document.getElementById('myCanvas');
-    $scope.context = $scope.canvas.getContext("2d");
+    //$scope.canvas = document.getElementById('myCanvas');
+    //$scope.context = $scope.canvas.getContext("2d");
     $scope.imageList = $resource("http://localhost:5000/images").get();
     $scope.getTweets();
     $scope.ImageGenerator.init();
+    // TODO: Add callback to generate image on load
+    //$scope.generateImage();
     console.log($scope.imageList);
   });
 });
