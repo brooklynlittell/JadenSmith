@@ -44,7 +44,7 @@ angular.module('jadenSmithApp')
 
   $scope.generateImage = function(){
     //console.log("Generate Image: " + $scope.imageList.images[$scope.currentImage]);
-    var tweet = $scope.tweetList.tweets[222];
+    var tweet = "test"; //$scope.tweetList.tweets[222];
     var image = $scope.imageList.images[$scope.currentImage];
     $scope.ImageGenerator.generate(tweet, "officialjaden", image, "CENTER");
   };
@@ -73,10 +73,9 @@ angular.module('jadenSmithApp')
 
     var _this = this;
     _this.imageObj = new Image();
-    _this.imageObj.crossOrigin="anonymous";
-    this.imageObj.src = _this.imageSrc; 
+    _this.imageObj.crossOrigin = "anonymous";
     console.log("Image made");
-    this.imageObj.onload = function(){
+    _this.imageObj.onload = function(){
       console.log("Generate onload");
       _this.context.drawImage(_this.imageObj, 0, 0, _this.imageWidth, _this.imageHeight);
       // not perfect formula...
@@ -97,7 +96,7 @@ angular.module('jadenSmithApp')
       _this.context.fillText(authorText, width, 380);
     };
 console.log("Generate End");
-    //_this.imageObj.src = imageSrc; 
+    _this.imageObj.src = imageSrc; 
   };
 
 // From: http://www.html5canvastutorials.com/tutorials/html5-canvas-wrap-text-tutorial/
