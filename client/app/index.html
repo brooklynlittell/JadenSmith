@@ -9,12 +9,11 @@
   <!-- bower:css -->
   <!-- endbower -->
   <!-- endbuild -->
-  <!-- build:css(.tmp) styles/main.css -->
+  <!-- build:css(.tmp) styles/index.css -->
   <script src="http://code.jquery.com/jquery.js"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- Latest compiled and minified CSS -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-  <link href='http://fonts.googleapis.com/css?family=Josefin+Slab' rel='stylesheet' type='text/css'>   
    <!-- Optional theme -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
 
@@ -23,10 +22,12 @@
 </head>
 <style>
 .footer{
+  height: 4%;
   position: fixed;
   bottom:0px;
   width:100%;
 }
+
 </style>
 <body ng-app="jadenSmithApp">
   <!--[if lte IE 8]>
@@ -39,7 +40,7 @@
     <div class="container-fluid">
       <!-- Brand and toggle get grouped for better mobile display -->
       <div class="navbar-header">
-        <a class="navbar-brand" href="#">Jaden Smith</a>
+        <a class="navbar-brand" href="#/">Jaden Smith</a>
       </div>
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav">
@@ -63,19 +64,6 @@
       <p>jlamere &amp; brandonlittell</p>
     </div>
   </div>
-
-
-<!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
- <script>
-   !function(A,n,g,u,l,a,r){A.GoogleAnalyticsObject=l,A[l]=A[l]||function(){
-   (A[l].q=A[l].q||[]).push(arguments)},A[l].l=+new Date,a=n.createElement(g),
-   r=n.getElementsByTagName(g)[0],a.src=u,r.parentNode.insertBefore(a,r)
-   }(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-   ga('create', 'UA-XXXXX-X');
-   ga('send', 'pageview');
-</script>
-
 <!-- build:js(.) scripts/vendor.js -->
 <!-- bower:js -->
 <script src="bower_components/jquery/dist/jquery.js"></script>
@@ -96,6 +84,10 @@
 <script src="scripts/app.js"></script>
 <script src="scripts/controllers/main.js"></script>
 <script src="scripts/controllers/about.js"></script>
+<script src="scripts/services/twitter.js"></script>
+<script src="scripts/services/images.js"></script>
+<script src="scripts/services/imageGen.js"></script>
+
 <!-- endbuild -->
 </body>
 </html>
