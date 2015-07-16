@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <title>JadenSmith</title>
-    <script src="http://code.jquery.com/jquery.js"></script>
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="./color-thief.min.js"></script>
+
     <style>
     body {
         font-family: 'Josefin Slab', serif;
@@ -23,7 +25,7 @@
     <div class="container">
       <div class="row">
         <div class="span12">
-          <h1>Hi brandon. Hit search to start.</h1>
+          <h1>Hi brandon. Hit seearch to start.</h1>
         </div>
         <form class="form-inline">
           <div class="form-group">
@@ -36,24 +38,26 @@
           <button type="button" class="btn btn-primary" id ="searchButton">Search</button>
         </form>
         <div id = "images">
-          <canvas id="myCanvas" width="400" height="400"></canvas>
-          <br>
-          <button type="button" class="btn btn-primary" id ="newImage">New Image</button>
-          <div class="btn-group" role="group" aria-label="...">
-            <button type="button" class="btn btn-primary active" id ="justifyLeft">Left</button>
-            <button type="button" class="btn btn-primary" id ="justifyCenter">Center</button>
-            <button type="button" class="btn btn-primary" id ="justifyRight">Right</button>
+          <div id = "image">
+            <canvas id="myCanvas" width="400" height="400"></canvas>
+            <br>
+            <button type="button" class="btn btn-primary" id ="newImage">New Image</button>
+            <div class="btn-group" role="group" aria-label="...">
+              <button type="button" class="btn btn-primary active" id ="justifyLeft">Left</button>
+              <button type="button" class="btn btn-primary" id ="justifyCenter">Center</button>
+              <button type="button" class="btn btn-primary" id ="justifyRight">Right</button>
+            </div>
+            <button type="button" class="btn btn-primary" id ="download">Download</button>
           </div>
-          <button type="button" class="btn btn-primary" id ="download">Download</button>
         </div>
+          
         <br>
       </div>
     </div>
-
 <script>
-var LEFT = true;
-var RIGHT = false;
+// start out with bottom section hidden
 $('#images').hide();
+
 $('#searchButton').click(function(){
   addImage($("#userName").val());
   $('#images').show();
@@ -61,6 +65,7 @@ $('#searchButton').click(function(){
 $('#newImage').click(function(){
   ImageGenerator.updateImage();
 });
+//fancy button things
 $('#justifyRight').click(function(){
   ImageGenerator.generate("RIGHT");
   $("#justifyLeft").attr('class', 'btn btn-primary');
@@ -101,17 +106,26 @@ ImageGenerator.generate = function(justify) {
   var _this = this;
   _this.imageObj = new Image();
   _this.imageObj.crossOrigin="anonymous";
+  this.imageObj.src = _this.imageSrc; 
   this.imageObj.onload = function(){
-  _this.context.drawImage(_this.imageObj, 0, 0, _this.imageWidth, _this.imageHeight);
-  _this.context.font = "30px Georgia";
-  _this.context.fillStyle = "white";
+    _this.context.drawImage(_this.imageObj, 0, 0, _this.imageWidth, _this.imageHeight);
+    // not perfect formula...
+    var fontSize = 80 - (_this.tweetText.length / 2.5);
+    var fonts = ["Arial", "Georgia", "Times New Roman"];
+    var font = fonts[Math.floor(Math.random() * fonts.length)];
+    _this.context.font = fontSize + "px " + font;
+    _this.context.strokeStyle = getInverseColor(_this.canvas);
+    _this.context.fillStyle = "white";
 
-    // Write Text
-  wrapText(_this.context, _this.tweetText, _this.textPadding, 60, _this.imageWidth - (_this.textPadding * 2), 35, justify);
-  var authorSize = _this.context.measureText(_this.authorText)
-  var width = 400 - authorSize.width - (_this.textPadding);
-  _this.context.fillText(_this.authorText, width, 380);
-};
+      // Write Text
+    wrapText(_this.context, _this.tweetText, _this.textPadding, 60, _this.imageWidth - (_this.textPadding * 2), fontSize, justify);
+     _this.context.font = "30px " + font;
+    var authorSize = _this.context.measureText(_this.authorText)
+    var width = 400 - authorSize.width - (_this.textPadding);
+    // super non precise formula
+    _this.context.lineWidth = fontSize /30;
+    _this.context.fillText(_this.authorText, width, 380);
+  };
 
   _this.imageObj.src = _this.imageSrc; 
 }
@@ -119,16 +133,16 @@ ImageGenerator.generate = function(justify) {
 //todo: have some sort of stack to pull new images from
 ImageGenerator.updateImage = function(){
   var _this = this;
-  _this.imageObj.src = "https://scontent.cdninstagram.com/hphotos-xaf1/t51.2885-15/e15/11348292_1639969832907684_1002339914_n.jpg"
-  _this.imageSrc = _this.imageObj.src;
+  _this.imageSrc = ImageStack.getImage();
+  _this.imageObj.src = _this.imageSrc; 
 }
 
 function addImage(username){
   var newImageButton = '';
   $("body").after(newImageButton);
-  var tweet = "Shia Labeouf Is Life.";
-  var user = "@officaljaden";
-  var image = "https://scontent.cdninstagram.com/hphotos-xfa1/t51.2885-15/e15/11380190_955897017766892_1301000394_n.jpg";
+  var tweet = "How Can Mirrors Be Real If Our Eyes Aren't Real";
+  var user = "@officialjaden";
+  var image = ImageStack.getImage();
 
   ImageGenerator.init(tweet, user, image);
   ImageGenerator.generate("LEFT");
@@ -143,6 +157,7 @@ function wrapText(context, text, x, y, maxWidth, lineHeight, justify) {
     var testWidth = metrics.width;
     if (testWidth > maxWidth && n > 0) {
       context.fillText(line, getX(justify, x, line, context), y);
+      context.strokeText(line, getX(justify, x, line, context), y);
       line = words[n] + ' ';
       y += lineHeight;
     }
@@ -151,6 +166,8 @@ function wrapText(context, text, x, y, maxWidth, lineHeight, justify) {
     }
   }
   context.fillText(line, getX(justify, x, line, context), y);
+  context.strokeText(line, getX(justify, x, line, context), y);
+
 }
 function getX(justify, x, line, context){
   switch(justify){
@@ -163,6 +180,36 @@ function getX(justify, x, line, context){
     }
   }
 
+var ImageStack = new Object();
+ImageStack.getImage = function() {
+  var imageToReturn = imagesForStack.pop();
+  imagesForStack.unshift(imageToReturn);
+  return imageToReturn;
+}
+function getHex(values){
+    var red = values[0];
+    var green = values[1];
+    var blue = values[2];
+    var rgb = blue | (green << 8) | (red << 16);
+    return "#" + rgb.toString(16);
+}
+function invertColor(hexTripletColor) {
+    var color = hexTripletColor;
+    color = color.substring(1);           // remove #
+    color = parseInt(color, 16);          // convert to integer
+    color = 0xFFFFFF ^ color;             // invert three bytes
+    color = color.toString(16);           // convert to hex
+    color = ("000000" + color).slice(-6); // pad with leading zeros
+    color = "#" + color;                  // prepend #
+    return color;
+}
+function getInverseColor(canvas){
+  var colorThief = new ColorThief();
+  var color = getHex(colorThief.getColor(canvas));
+  return invertColor(color);
+}
+// this is just one query to images
+var imagesForStack = ["https://scontent.cdninstagram.com/hphotos-xaf1/t51.2885-15/s640x640/e35/sh0.08/11420932_1644094922492443_595352985_n.jpg","https://scontent.cdninstagram.com/hphotos-xfp1/t51.2885-15/s640x640/e35/sh0.08/10725181_1446608312330215_1454662323_n.jpg","https://scontent.cdninstagram.com/hphotos-xaf1/t51.2885-15/s640x640/e35/sh0.08/11248975_1128304283852876_2089814245_n.jpg","https://scontent.cdninstagram.com/hphotos-xaf1/t51.2885-15/s640x640/e35/sh0.08/11426229_788284384604035_674378447_n.jpg","https://scontent.cdninstagram.com/hphotos-xaf1/t51.2885-15/e15/11355214_112789875729359_2011113777_n.jpg","https://scontent.cdninstagram.com/hphotos-xaf1/t51.2885-15/s640x640/e35/sh0.08/11242272_1614740678804265_983014268_n.jpg","https://scontent.cdninstagram.com/hphotos-xfa1/t51.2885-15/s640x640/e35/sh0.08/11382944_860348607372694_790343067_n.jpg","https://scontent.cdninstagram.com/hphotos-xaf1/l/t51.2885-15/s640x640/e35/sh0.08/11296672_469178303255162_1233511325_n.jpg","https://scontent.cdninstagram.com/hphotos-xaf1/t51.2885-15/s640x640/e35/sh0.08/11251006_1447925222178817_1546834133_n.jpg","https://scontent.cdninstagram.com/hphotos-xaf1/t51.2885-15/s640x640/e35/sh0.08/11379012_591431260995754_54037340_n.jpg","https://scontent.cdninstagram.com/hphotos-xaf1/t51.2885-15/s640x640/e15/11355280_1658052561080612_512347973_n.jpg","https://scontent.cdninstagram.com/hphotos-xfa1/t51.2885-15/s640x640/e35/sh0.08/11377967_989337941096852_1410326726_n.jpg","https://scontent.cdninstagram.com/hphotos-xaf1/t51.2885-15/s640x640/e35/sh0.08/11379933_415545991979954_593035581_n.jpg","https://scontent.cdninstagram.com/hphotos-xaf1/t51.2885-15/s640x640/e35/sh0.08/11377662_133801170285884_1336436174_n.jpg","https://scontent.cdninstagram.com/hphotos-xaf1/t51.2885-15/s640x640/e35/sh0.08/11385213_889367941130499_744669579_n.jpg","https://scontent.cdninstagram.com/hphotos-xaf1/l/t51.2885-15/s640x640/e35/sh0.08/11373789_504631516358632_160388150_n.jpg","https://scontent.cdninstagram.com/hphotos-xaf1/t51.2885-15/s640x640/e35/sh0.08/11359012_1594482760813180_1109799520_n.jpg","https://scontent.cdninstagram.com/hphotos-xaf1/t51.2885-15/s640x640/e35/sh0.08/11363646_868288236589063_2068054697_n.jpg","https://scontent.cdninstagram.com/hphotos-xaf1/t51.2885-15/e15/11372398_1609473662667485_459261448_n.jpg","https://scontent.cdninstagram.com/hphotos-xaf1/t51.2885-15/e15/11376357_1623817521207219_1000371392_n.jpg"];
 </script>
 </body>
 </html>
