@@ -150,10 +150,10 @@ function invertColor(hexTripletColor) {
     return color;
 }
 function getInverseColor(canvas){
-  //var colorThief = new ColorThief();
-  //var color = getHex(colorThief.getColor(canvas));
-  //return invertColor(color);
-  return "white";
+  var colorThief = new ColorThief();
+  var color = getHex(colorThief.getColor(canvas));
+  return invertColor(color);
+  //return "white";
 }
 
 
