@@ -1,25 +1,30 @@
-<canvas id="myCanvas" width="578" height="400"></canvas>
+<h1>Cool Html Template!</h1>
+<form class="form-inline" data-ng-init="getImages"()>
+  <div class="form-group">
+    <label class="sr-only" for="exampleInputAmount">Enter twitter username</label>
+      <div class="input-group">
+        <div class="input-group-addon">@</div>
+        <input type="text" class="form-control" id="userName" value="officaljaden">
+      </div>
+  <button type="submit" class="btn btn-primary" ng-click="onSearchTweets()" ng-model="searchButton"> Search</button>
+  </div>
+</form>
+<div id = "images" ng-show='isSearch'>
+  <div id = "image">
+    <canvas id="myCanvas" width="400" height="400"></canvas>
+    <br>
+    <button type="button" class="btn btn-primary" id ="newImage" ng-click="onNewImage()">New Image</button>
+    <div class="btn-group" role="group" aria-label="...">
+      <button type="button" class="btn btn-primary active" id ="justifyLeft">Left</button>
+      <button type="button" class="btn btn-primary" id ="justifyCenter">Center</button>
+      <button type="button" class="btn btn-primary" id ="justifyRight">Right</button>
+    </div>
+    <button type="button" class="btn btn-primary" id ="download">Download</button>
+  </div>
+</div>
 
-<script>
-window.onload = function(){
- var canvas = document.getElementById("myCanvas");
- var context = canvas.getContext("2d");
- var imageObj = new Image();
- // TODO text/user should be passed in to the function
- var text = "Wishing you weren't dutch?"
- var line2 = " #itsbecauseurdutch"
- var user = "@brandon_littell"
- imageObj.onload = function(){
-    // why don't images look square?
-    context.drawImage(imageObj, 0, 0, 610, 610);
-    context.font = "30px Georgia";
-    context.fillStyle = "white";
-    //TODO automatic text wrapping
-    context.fillText(text, 20, 100);
-    context.fillText(line2, 0, 148);
-    context.fillText(user, 250, 350);
- };
- //param passed in
- imageObj.src = "https://scontent.cdninstagram.com/hphotos-xfa1/t51.2885-15/s640x640/e35/sh0.08/11355905_1618613161745444_1921259379_n.jpg"; 
-}
-</script>
+{{currentTweet}}
+{{currentImage}} 
+{{imageList}}
+{{tweetList}}
+
