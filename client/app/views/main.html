@@ -9,19 +9,19 @@
   <button type="submit" class="btn btn-primary" ng-click="onSearchTweets()" ng-model="searchButton"> Search</button>
   </div>
 </form>
- <div id = "images" ng-show='isSearch'>
-          <div id = "image">
-            <canvas id="myCanvas" width="400" height="400"></canvas>
-            <br>
-            <button type="button" class="btn btn-primary" id ="newImage" ng-click="onNewImage()">New Image</button>
-            <div class="btn-group" role="group" aria-label="...">
-              <button type="button" class="btn btn-primary active" id ="justifyLeft">Left</button>
-              <button type="button" class="btn btn-primary" id ="justifyCenter">Center</button>
-              <button type="button" class="btn btn-primary" id ="justifyRight">Right</button>
-            </div>
-            <button type="button" class="btn btn-primary" id ="download">Download</button>
-          </div>
-        </div>
+<div id = "images" ng-show='isSearch'>
+  <div id = "image">
+    <canvas id="myCanvas" width="400" height="400"></canvas>
+    <br>
+    <button type="button" class="btn btn-primary" id ="newImage" ng-click="onNewImage()">New Image</button>
+    <div class="btn-group" role="group" aria-label="...">
+      <button type="button" class="btn btn-primary active" id ="justifyLeft">Left</button>
+      <button type="button" class="btn btn-primary" id ="justifyCenter">Center</button>
+      <button type="button" class="btn btn-primary" id ="justifyRight">Right</button>
+    </div>
+    <button type="button" class="btn btn-primary" id ="download">Download</button>
+  </div>
+</div>
 
 {{currentTweet}}
 {{currentImage}} 

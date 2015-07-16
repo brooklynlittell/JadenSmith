@@ -44,6 +44,7 @@ angular.module('jadenSmithApp')
 
   $scope.generateImage = function(){
   	//console.log($scope.imageList.images[$scope.currentImage]);
+  	
   };
 
   $scope.onSearchUser = function(){
@@ -57,6 +58,8 @@ angular.module('jadenSmithApp')
   };
 
   $scope.$on('$viewContentLoaded', function () {
+  	$scope.canvas = document.getElementById('myCanvas');
+  	$scope.context = $scope.canvas.getContext("2d");
     $scope.imageList = $resource("http://localhost:5000/images").get();
     $scope.getTweets();
     console.log($scope.imageList);
