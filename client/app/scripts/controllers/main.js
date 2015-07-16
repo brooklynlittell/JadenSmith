@@ -13,6 +13,7 @@ var app = angular.module('jadenSmithApp');
 app.controller('MainCtrl', ['$scope', '$resource','$window','getTweets', 'getImage', 'generateImage', 
   function ($scope, $resource, $window, getTweets, getImage, generateImage) {
     $scope.username = 'officialjaden'
+    // temp until tweets gets fixed
     $scope.tweets = ["Yeah Your Girl Is Bad But She Doesn't Smile.", "That Moment When Peeing Feels So Good You Start Crying."];
     $scope.image;
     $scope.showImages = false;
@@ -29,6 +30,7 @@ app.controller('MainCtrl', ['$scope', '$resource','$window','getTweets', 'getIma
       $scope.showImages = true;
      };
 
+  // functions for editing buttons
    $scope.onNewImage = function(tweet){
       console.log("Generating new image for " + tweet)
       generateImage(tweet, $scope.image = getImage(), $scope.username, $scope.justify, 0);
@@ -45,10 +47,14 @@ app.controller('MainCtrl', ['$scope', '$resource','$window','getTweets', 'getIma
     };
   }]);
 
+
+// on page load 
 app.run(function ($rootScope, getImage){
   $rootScope.image = getImage();
 });
 
+
+// html templating
 app.directive('images', function() {
   return {
     templateUrl: '../../views/subviews/images.html'
