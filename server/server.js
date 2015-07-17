@@ -36,7 +36,7 @@
     app.get('/api/images', function(req, res) {
         var imageUrls = {};
         ig.use({client_id: config.instagramkey, client_secret: config.instagramsecret});
-        ig.tag_media_recent('nature', function(err, medias, pagination, remaining, limit) {
+        ig.tag_media_recent('vsco', function(err, medias, pagination, remaining, limit) {
              if(err) { 
                 throw new Error(err); 
             }

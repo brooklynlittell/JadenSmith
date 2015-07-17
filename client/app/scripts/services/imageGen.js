@@ -10,8 +10,8 @@ angular.module('jadenSmithApp')
     console.log("CANVAS: " + canvas)
   	this.canvas = document.getElementById(canvas);
     this.context = this.canvas.getContext("2d");
-    this.imageWidth = 400;
-    this.imageHeight = 400;
+    this.imageWidth = 600;
+    this.imageHeight = 600;
     this.textPadding = 20;
   }
 
@@ -20,7 +20,6 @@ angular.module('jadenSmithApp')
     console.log("Tweet: " + tweetText);
     console.log("Author: " + authorText);
     console.log("Image: " + imageSrc);
-
     var _this = this;
     _this.imageObj = new Image();
     _this.imageObj.crossOrigin = "anonymous";
@@ -28,8 +27,11 @@ angular.module('jadenSmithApp')
     _this.imageObj.onload = function(){
       console.log("Generate onload");
       _this.context.drawImage(_this.imageObj, 0, 0, _this.imageWidth, _this.imageHeight);
-      // not perfect formula...
-      var fontSize = 80 - (tweetText.length / 2.5);
+      // not perfect formula..
+      var percent = (tweetText.length + 5) / (180 - 1);
+      var outputY = 140 - (percent * (140));
+      var fontSize = outputY;
+
       var fonts = ["Arial", "Georgia", "Times New Roman"];
       var font = fonts[Math.floor(Math.random() * fonts.length)];
       _this.context.font = fontSize + "px " + font;
@@ -37,27 +39,35 @@ angular.module('jadenSmithApp')
       _this.context.fillStyle = "white";
 
         // Write Text
-      wrapText(_this.context, tweetText, _this.textPadding, 60, _this.imageWidth - (_this.textPadding * 2), fontSize, justify);
+      wrapText(_this.context, tweetText, _this.textPadding, _this.imageWidth - (_this.textPadding * 2), fontSize, justify, font, fontSize);
        _this.context.font = "30px " + font;
        authorText = "@" + authorText;
       var authorSize = _this.context.measureText(authorText);
-      var width = 400 - authorSize.width - (_this.textPadding);
+      var width = 600 - authorSize.width - (_this.textPadding);
       // super non precise formula
       _this.context.lineWidth = fontSize /30;
-      _this.context.fillText(authorText, width, 380);
+      _this.context.fillText(authorText, width, 580);
     };
     console.log("Generate End");
     _this.imageObj.src = imageSrc; 
   }
-  function wrapText(context, text, x, y, maxWidth, lineHeight, justify) {
+  function wrapText(context, text, x, maxWidth, lineHeight, justify, font, fontSize) {
     console.log("Wrapping text");
     var words = text.split(' ');
     var line = '';
+    y = lineHeight
+    var oldFontSize = fontSize;
     for(var n = 0; n < words.length; n++) {
       var testLine = line + words[n] + ' ';
       var metrics = context.measureText(testLine);
       var testWidth = metrics.width;
+      fontSize = oldFontSize;
+      context.font = fontSize + "px " + font;
       if (testWidth > maxWidth && n > 0) {
+        while (context.measureText(line).width > 600){
+          fontSize--;
+          context.font = fontSize + "px " + font;
+        }
         context.fillText(line, getX(justify, x, line, context), y);
         context.strokeText(line, getX(justify, x, line, context), y);
         line = words[n] + ' ';

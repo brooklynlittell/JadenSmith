@@ -41,6 +41,7 @@ app.controller('MainCtrl', ['$scope', '$resource','$window','getTweets', 'getIma
 
     $scope.onSearch = function() {
       // async stuff (slightly broken for images)
+      $scope.tweetCount = 0;
       getTweets($scope.username).then(function(tweets){
         $scope.tempTweets = tweets;
         generateImage($scope.tempTweets[$scope.tweetCount], $scope.image = getImage(), $scope.username, $scope.justify, 0);
