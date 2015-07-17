@@ -31,16 +31,17 @@ angular.module('jadenSmithApp')
       var percent = (tweetText.length + 5) / (180 - 1);
       var outputY = 140 - (percent * (140));
       var fontSize = outputY;
+      fontSize = tweetText.length > 100 ? fontSize + fontSize* 1/5 : fontSize;
+      fontSize = tweetText.length > 120 ? fontSize + fontSize* 1/5 : fontSize;
 
-      var fonts = ["Arial", "Georgia", "Times New Roman"];
-      var font = fonts[Math.floor(Math.random() * fonts.length)];
-      _this.context.font = fontSize + "px " + font;
+      console.log(fontSize +  " " +tweetText.length)
+      _this.context.font = fontSize + "px Arial";
       _this.context.strokeStyle = getInverseColor(_this.canvas);
       _this.context.fillStyle = "white";
 
         // Write Text
-      wrapText(_this.context, tweetText, _this.textPadding, _this.imageWidth - (_this.textPadding * 2), fontSize, justify, font, fontSize);
-       _this.context.font = "30px " + font;
+      wrapText(_this.context, tweetText, _this.textPadding, _this.imageWidth - (_this.textPadding * 2), fontSize, justify, fontSize);
+       _this.context.font = "30px Arial" ;
        authorText = "@" + authorText;
       var authorSize = _this.context.measureText(authorText);
       var width = 600 - authorSize.width - (_this.textPadding);
@@ -51,7 +52,7 @@ angular.module('jadenSmithApp')
     console.log("Generate End");
     _this.imageObj.src = imageSrc; 
   }
-  function wrapText(context, text, x, maxWidth, lineHeight, justify, font, fontSize) {
+  function wrapText(context, text, x, maxWidth, lineHeight, justify, fontSize) {
     console.log("Wrapping text");
     var words = text.split(' ');
     var line = '';
@@ -62,11 +63,11 @@ angular.module('jadenSmithApp')
       var metrics = context.measureText(testLine);
       var testWidth = metrics.width;
       fontSize = oldFontSize;
-      context.font = fontSize + "px " + font;
+      context.font = fontSize + "px Arial";
       if (testWidth > maxWidth && n > 0) {
         while (context.measureText(line).width > 600){
           fontSize--;
-          context.font = fontSize + "px " + font;
+          context.font = fontSize + "px Arial" ;
         }
         context.fillText(line, getX(justify, x, line, context), y);
         context.strokeText(line, getX(justify, x, line, context), y);
@@ -77,6 +78,10 @@ angular.module('jadenSmithApp')
         line = testLine;
       }
     }
+    while (context.measureText(line).width > 550){
+        fontSize--;
+        context.font = fontSize + "px Arial" ;
+      }
     context.fillText(line, getX(justify, x, line, context), y);
     context.strokeText(line, getX(justify, x, line, context), y);
   }

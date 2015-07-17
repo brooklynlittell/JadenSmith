@@ -36,12 +36,14 @@
     app.get('/api/images', function(req, res) {
         var imageUrls = {};
         ig.use({client_id: config.instagramkey, client_secret: config.instagramsecret});
-        ig.tag_media_recent('vsco', function(err, medias, pagination, remaining, limit) {
+        var queries = ['pro_shooters', 'natureonly', 'insta_pick']
+        var rand = queries[Math.floor(Math.random() * queries.length)];
+        ig.tag_media_recent(rand, function(err, medias, pagination, remaining, limit) {
              if(err) { 
                 throw new Error(err); 
             }
              for(photo in medias){
-                console.log("processing new photo");
+                console.log("processing new photo on query " + rand);
                 imageUrls[photo] = medias[photo].images.standard_resolution.url;
              }
             var response = new Object();
