@@ -53,21 +53,21 @@ app.run(function ($rootScope, getImage){
   $rootScope.image = getImage();
 });
 
-
+app.subviewPath = '../../views/subviews/';
 // html templating
 app.directive('images', function() {
   return {
-    templateUrl: '../../views/subviews/images.html'
+    templateUrl: app.subviewPath + 'images.html'
   };
 });
 
 app.directive('image', function() {
   return {
-    templateUrl: '../../views/subviews/image.html'
+    templateUrl: app.subviewPath + 'image.html'
   };
 });
 app.directive('editimage', function() {
   return {
-    templateUrl: '../../views/subviews/editImage.html'
+    templateUrl: app.subviewPath + 'editImage.html'
   };
 });
