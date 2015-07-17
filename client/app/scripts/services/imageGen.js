@@ -1,5 +1,5 @@
 angular.module('jadenSmithApp')
-.service('generateImage', [function() {
+.service('generateImage', ['getHex', 'invertColor', 'getX', 'getInverseColor', function(getHex, invertColor, getX, getInverseColor) {
    return function(tweetText, imageSrc, authorText, justify, count) {
    	init(count);
    	generate(tweetText, authorText, imageSrc, justify);
@@ -69,42 +69,6 @@ angular.module('jadenSmithApp')
     }
     context.fillText(line, getX(justify, x, line, context), y);
     context.strokeText(line, getX(justify, x, line, context), y);
-  }
-
-  function getX(justify, x, line, context){    
-    switch(justify){
-    case "LEFT":
-      return x;  
-    case "RIGHT":
-      return this.imageWidth - x - context.measureText(line).width;         
-    case "CENTER":
-      return (this.imageWidth - x - context.measureText(line).width) / 2;      
-    }
-  }
-
-  function getHex(values){
-    var red = values[0];
-    var green = values[1];
-    var blue = values[2];
-    var rgb = blue | (green << 8) | (red << 16);
-    return "#" + rgb.toString(16);
-  }
-
-  function invertColor(hexTripletColor) {
-    var color = hexTripletColor;
-    color = color.substring(1);           // remove #
-    color = parseInt(color, 16);          // convert to integer
-    color = 0xFFFFFF ^ color;             // invert three bytes
-    color = color.toString(16);           // convert to hex
-    color = ("000000" + color).slice(-6); // pad with leading zeros
-    color = "#" + color;                  // prepend #
-    return color;
-  }
-
-  function getInverseColor(canvas){
-    var colorThief = new ColorThief();
-    var color = getHex(colorThief.getColor(canvas));
-    return invertColor(color);
   }
  }]);
 
