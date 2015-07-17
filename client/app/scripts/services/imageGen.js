@@ -106,6 +106,5 @@ angular.module('jadenSmithApp')
     var color = getHex(colorThief.getColor(canvas));
     return invertColor(color);
   }
-  
  }]);
 
