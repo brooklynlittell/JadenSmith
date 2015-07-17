@@ -36,6 +36,7 @@
     app.get('/api/images', function(req, res) {
         var imageUrls = {};
         ig.use({client_id: config.instagramkey, client_secret: config.instagramsecret});
+        // playing around with mixing up the tags for variety
         var queries = ['pro_shooters', 'natureonly', 'insta_pick']
         var rand = queries[Math.floor(Math.random() * queries.length)];
         ig.tag_media_recent(rand, function(err, medias, pagination, remaining, limit) {

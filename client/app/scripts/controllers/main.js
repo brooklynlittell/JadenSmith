@@ -28,33 +28,44 @@ and $tweetCount
 
 var app = angular.module('jadenSmithApp');
 
-app.controller('MainCtrl', ['$scope', '$resource','$window','getTweets', 'getImage', 'generateImage', 
-  function ($scope, $resource, $window, getTweets, getImage, generateImage) {
+app.controller('MainCtrl', ['$scope', '$resource','$window','$cacheFactory','getTweets', 'getImage', 'generateImage', 
+  function ($scope, $resource, $window, $cacheFactory, getTweets, getImage, generateImage) {
     $scope.username = 'officialjaden'
     // temp until tweets gets fixed
     $scope.tweets = ["Yeah Your Girl Is Bad But She Doesn't Smile.", "That Moment When Peeing Feels So Good You Start Crying."];
     $scope.image;
     $scope.showImages = false;
     $scope.justify = "CENTER";
-    $scope.tweetCount = 0;
+    $scope.tweetCount =0;
     $scope.tempTweets;
-
+    $scope.keys = [];
+    $scope.cache = $cacheFactory('userTweets');
     $scope.onSearch = function() {
-      // async stuff (slightly broken for images)
-      $scope.tweetCount = 0;
-      getTweets($scope.username).then(function(tweets){
-        $scope.tempTweets = tweets;
-        generateImage($scope.tempTweets[$scope.tweetCount], $scope.image = getImage(), $scope.username, $scope.justify, 0);
-        $scope.showImages = true;
-        $scope.tweetCount++;
-      })
+      if ($scope.cache.get($scope.username) === undefined) {
+        // async stuff (slightly broken for images)
+        $scope.tweetCount = 0;
+        getTweets($scope.username).then(function(tweets){
+          $scope.keys.push($scope.username);
+          $scope.cache.put($scope.username, tweets);
+          $scope.tempTweets = tweets;
+          $scope.drawImage();
+        })
+      }
+      else{
+          console.log("tweets were cached")
+          $scope.tempTweets = $scope.cache.get($scope.username);
+          $scope.drawImage();
+        }
      };
-
+    $scope.drawImage = function(){
+      generateImage($scope.tempTweets[$scope.tweetCount], $scope.image = getImage(), $scope.username, $scope.justify, 0);
+      $scope.showImages = true;
+      $scope.tweetCount++;
+    }
   // functions for editing buttons
    $scope.onNewImage = function(tweet){
       console.log("Generating new image for " + tweet)
-      generateImage($scope.tempTweets[$scope.tweetCount], $scope.image = getImage(), $scope.username, $scope.justify, 0);
-      $scope.tweetCount++;    
+      $scope.drawImage();    
     };
    $scope.onNewJustify = function(justify, tweet){
       console.log("Generating new justification " + justify + " for " + tweet)

@@ -34,7 +34,6 @@ angular.module('jadenSmithApp')
       fontSize = tweetText.length > 100 ? fontSize + fontSize* 1/5 : fontSize;
       fontSize = tweetText.length > 120 ? fontSize + fontSize* 1/5 : fontSize;
 
-      console.log(fontSize +  " " +tweetText.length)
       _this.context.font = fontSize + "px Arial";
       _this.context.strokeStyle = getInverseColor(_this.canvas);
       _this.context.fillStyle = "white";
@@ -56,7 +55,7 @@ angular.module('jadenSmithApp')
     console.log("Wrapping text");
     var words = text.split(' ');
     var line = '';
-    y = lineHeight
+    var y = lineHeight
     var oldFontSize = fontSize;
     for(var n = 0; n < words.length; n++) {
       var testLine = line + words[n] + ' ';
