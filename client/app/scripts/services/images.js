@@ -2,7 +2,7 @@
 var imageList;
 
 angular.module('jadenSmithApp')
-.factory('getImage', ['$resource', function($resource) {
+.factory('ImageFactory', ['$resource', function($resource) {
     return function(){
       console.log("Searching for images");
       var pageNumber;
@@ -19,7 +19,7 @@ angular.module('jadenSmithApp')
       imageList = $resource("http://localhost:8080/api/images?page=" + localStorage.getItem("pageNumber")).get();
       return imageList.$promise.then(function (result) {
         imageList = result.images;
-        return imageList;      
+        return imageList;
         });    
     }
 }]);
