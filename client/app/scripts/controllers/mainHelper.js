@@ -10,7 +10,7 @@ var app = angular.module('jadenSmithApp');
 app.run(function ($rootScope, getImage){
   getImage().then(function(data){
     $rootScope.image = data;
-    console.log("Found images")
+    console.log("Found images");
   });
 });
 
