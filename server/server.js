@@ -70,7 +70,7 @@
     var data = {}
     data.tweets = tweetsCache.getStats();
     data.images = imagesCache.getStats();
-    data.caching = "Total Queries In Cache" + totalCache + " Total Queries  " + totalQueries;
+    data.caching = "Total Queries In Cache " + totalCache + " Total Queries  " + totalQueries;
     res.send(data);
   }) 
   app.get('/api/tweets/:user?', function(req, res) {
@@ -95,7 +95,7 @@
     var twitter = new Twitter(conf);
     //pull in 100 tweets excluding rts and replies
     var error = function (err, response, body) {
-        console.log('ERROR [%s]', err);
+        res.status(404).send('Not found');
     };
     var success = function (data) {
         // make response pretty
