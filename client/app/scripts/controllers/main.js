@@ -101,12 +101,14 @@ app.controller('MainCtrl', ['$scope', '$rootScope','$resource','$window','$cache
         };
         // actually calling the image generation class
         $scope.drawImage = function(){
+            $scope.imageStatus = ''
             generateImage($scope.tempTweets[$scope.tweetCount], $rootScope.image[$scope.imageCount], $scope.username, $scope.justify, 0);
             $scope.imageStatus = ''
             $scope.showImages = true;
-            $scope.tweetCount++;     
+            $scope.tweetCount++;
             $scope.timer = new Date() - $scope.timer;
-            console.log("Request handeled in " + $scope.timer + " milliseconds");
+            console.log("Request handeled in " + $scope.timer + " milliseconds");            
+
         };
     }
 ]);
