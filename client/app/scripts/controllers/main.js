@@ -33,7 +33,6 @@ app.controller('MainCtrl', ['$scope', '$rootScope','$resource','$window','$cache
         $scope.username = 'officialjaden';
         // temp until tweets gets fixed
         $scope.tweets = ["Yeah Your Girl Is Bad But She Doesn't Smile.", "That Moment When Peeing Feels So Good You Start Crying."];
-        $scope.image = null;
         $scope.showImages = false;
         $scope.justify = "CENTER";
         $scope.tweetCount =0;
@@ -41,7 +40,13 @@ app.controller('MainCtrl', ['$scope', '$rootScope','$resource','$window','$cache
         $scope.keys = [];
         $scope.cache = $cacheFactory('userTweets');
         $scope.imageCount = 0;
+        $scope.imageStatus = '';
+        $scope.timer;
+
         $scope.onSearch = function() {
+            $scope.timer = new Date();
+            $scope.imageStatus = 'loading.....'
+            // cache tweets when possible
             if ($scope.cache.get($scope.username) === undefined) {
                 // async stuff (slightly broken for images)
                 $scope.tweetCount = 0;
@@ -60,6 +65,7 @@ app.controller('MainCtrl', ['$scope', '$rootScope','$resource','$window','$cache
         };
         // Events
         $scope.onNewImage = function(tweet){
+            $scope.timer = new Date();
             console.log("Generating new image for " + tweet);
             $scope.newImage();
         };
@@ -96,8 +102,11 @@ app.controller('MainCtrl', ['$scope', '$rootScope','$resource','$window','$cache
         // actually calling the image generation class
         $scope.drawImage = function(){
             generateImage($scope.tempTweets[$scope.tweetCount], $rootScope.image[$scope.imageCount], $scope.username, $scope.justify, 0);
+            $scope.imageStatus = ''
             $scope.showImages = true;
-            $scope.tweetCount++;            
+            $scope.tweetCount++;     
+            $scope.timer = new Date() - $scope.timer;
+            console.log("Request handeled in " + $scope.timer + " milliseconds");
         };
     }
 ]);
