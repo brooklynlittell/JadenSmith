@@ -9,5 +9,5 @@
  */
 angular.module('jadenSmithApp')
 .controller('GreetingController', ['$scope', function($scope) {
-  $scope.greeting = 'Hola!';
+    $scope.greeting = 'Hola!';
 }]);

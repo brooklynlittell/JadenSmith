@@ -8,10 +8,10 @@ var app = angular.module('jadenSmithApp');
 
 // on page load 
 app.run(function ($rootScope, getImage){
-  getImage().then(function(data){
-    $rootScope.image = data;
-    console.log("Found images");
-  });
+    getImage().then(function(data){
+        $rootScope.image = data;
+        console.log("Found images");
+    });
 });
 
 
@@ -19,19 +19,19 @@ app.run(function ($rootScope, getImage){
 app.subviewPath = '../../views/subviews/';
 
 app.directive('images', function() {
-  return {
-    templateUrl: app.subviewPath + 'images.html'
-  };
+    return {
+        templateUrl: app.subviewPath + 'images.html'
+    };
 });
 
 app.directive('image', function() {
-  return {
-    templateUrl: app.subviewPath + 'image.html'
-  };
+    return {
+        templateUrl: app.subviewPath + 'image.html'
+    };
 });
 
 app.directive('editimage', function() {
-  return {
-    templateUrl: app.subviewPath + 'editImage.html'
-  };
+    return {
+        templateUrl: app.subviewPath + 'editImage.html'
+    };
 });
