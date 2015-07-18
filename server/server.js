@@ -11,6 +11,8 @@
     var config = require('./config.json');
     var Twitter = require('twitter-node-client').Twitter;
     var cors = require('cors')
+    var NodeCache = require( "node-cache" );
+    var myCache = new NodeCache( { stdTTL: 1800000, checkperiod: 600 } );
 
     // configuration =================
     app.use(morgan('dev'));                                         // log every request to the console
@@ -32,12 +34,12 @@
         // playing around with mixing up the tags for variety
         var queries = ['pro_shooters', 'natureonly', 'insta_pick']
         var rand = queries[Math.floor(Math.random() * queries.length)];
+        console.log("searching for photos");
         ig.tag_media_recent(rand, function(err, medias, pagination, remaining, limit) {
              if(err) { 
                 throw new Error(err); 
             }
              for(photo in medias){
-                console.log("processing new photo on query " + rand);
                 imageUrls[photo] = medias[photo].images.standard_resolution.url;
              }
             var response = new Object();
@@ -53,7 +55,12 @@
     var _id  = req.query.user;
     console.log(req.route);
     console.log(req.query.user);
-
+    value = myCache.get( _id );
+    if ( value ){
+        console.log("Tweet found in cache");
+        res.json(value);
+        return;
+    }
     //Get this data from your twitter apps dashboard
     var conf = {
         "consumerKey": config.twitterkey,
@@ -70,18 +77,20 @@
         data = JSON.parse(data);
         for(tweet in data){
             // ignore tweets with a URL in it
-            console.log("processing new tweet" + data[tweet].text);
             if(data[tweet].text.indexOf("http") == -1){
                 // map text -> count (weight can be used later to pull good tweets)
                 tweets[tweet] = data[tweet].text;
+
             } 
         }
             var response = new Object();
             response.tweets = tweets;
+            success = myCache.set( _id, response, 10000 );
             console.log("sending tweets");
             res.json(response);
         
     };
+    console.log("searching for tweets");
     twitter.getUserTimeline({ screen_name: _id, count: '100',
     exclude_replies: true, include_rts: false}, error, success);
 });
