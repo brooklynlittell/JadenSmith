@@ -28,8 +28,16 @@ and $tweetCount
 
 var app = angular.module('jadenSmithApp');
 
-app.controller('MainCtrl', ['$scope', '$rootScope','$resource','$window','getTweets', 'getImage', 'generateImage', 
-    function ($scope, $rootScope, $resource, $window, getTweets, getImage, generateImage) {
+// on page load 
+app.run(function ($rootScope, getImages){
+    getImages().then(function(data){
+        $rootScope.image = data;
+        console.log("Found images");
+    });
+});
+
+app.controller('MainCtrl', ['$scope', '$rootScope','$resource','$window','getTweets', 'getImages', 'generateImage', 
+    function ($scope, $rootScope, $resource, $window, getTweets, getImages, generateImage) {
         $scope.username = 'officialjaden';
         // temp until tweets gets fixed
         $scope.tweets = ["Yeah Your Girl Is Bad But She Doesn't Smile.", "That Moment When Peeing Feels So Good You Start Crying."];
@@ -75,7 +83,7 @@ app.controller('MainCtrl', ['$scope', '$rootScope','$resource','$window','getTwe
           // if we need to get more images
           if ($scope.imageCount >= Object.keys($rootScope.image).length - 1 ){
             console.log("No more images. Querying for more.");
-            getImage().then(function(data){
+            getImages().then(function(data){
               $rootScope.image = data;
               console.log("Found images");
               $scope.imageCount = 0;
@@ -100,3 +108,23 @@ app.controller('MainCtrl', ['$scope', '$rootScope','$resource','$window','getTwe
         };
     }
 ]);
+
+// Templates
+app.subviewPath = '../../views/subviews/';
+app.directive('images', function() {
+    return {
+        templateUrl: app.subviewPath + 'images.html'
+    };
+});
+
+app.directive('image', function() {
+    return {
+        templateUrl: app.subviewPath + 'image.html'
+    };
+});
+
+app.directive('editimage', function() {
+    return {
+        templateUrl: app.subviewPath + 'editImage.html'
+    };
+});
