@@ -34,7 +34,6 @@
     "node": ">=0.10.0"
   },
   "scripts": {
-    "test": "grunt test",
-    "npm start": "grunt test && server/server.js"
+    "test": "grunt test"
   }
 }

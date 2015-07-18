@@ -3,16 +3,16 @@
     // set up ========================
     var express  = require('express');
     var app      = express();                               // create our app w/ express
+
     var morgan = require('morgan');             // log requests to the console (express4)
     var bodyParser = require('body-parser');    // pull information from HTML POST (express4)
+    
     var ig = require('instagram-node').instagram();
     var config = require('./config.json');
     var Twitter = require('twitter-node-client').Twitter;
     var cors = require('cors')
 
     // configuration =================
-
-
     app.use(morgan('dev'));                                         // log every request to the console
     app.use(bodyParser.json());                                     // parse application/json
     app.use(cors());
@@ -47,7 +47,6 @@
         });
 
     });
-
    
   app.get('/api/tweets/:user?', function(req, res) {
     var tweets = {};
@@ -69,7 +68,6 @@
     var success = function (data) {
         // make response pretty
         data = JSON.parse(data);
-        console.log("response " + data);
         for(tweet in data){
             // ignore tweets with a URL in it
             console.log("processing new tweet" + data[tweet].text);

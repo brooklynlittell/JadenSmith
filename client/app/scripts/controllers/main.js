@@ -42,9 +42,11 @@ app.controller('MainCtrl', ['$scope', '$rootScope','$resource','$window','$cache
         $scope.imageCount = 0;
         $scope.imageStatus = '';
         $scope.timer;
+
         $scope.onSearch = function() {
             $scope.timer = new Date();
             $scope.imageStatus = 'loading.....'
+            // cache tweets when possible
             if ($scope.cache.get($scope.username) === undefined) {
                 // async stuff (slightly broken for images)
                 $scope.tweetCount = 0;
@@ -106,6 +108,7 @@ app.controller('MainCtrl', ['$scope', '$rootScope','$resource','$window','$cache
             $scope.tweetCount++;
             $scope.timer = new Date() - $scope.timer;
             console.log("Request handeled in " + $scope.timer + " milliseconds");            
+
         };
     }
 ]);
