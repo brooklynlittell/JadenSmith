@@ -33,11 +33,11 @@ app.controller('MainCtrl', ['$scope', '$resource','$window','$cacheFactory','get
         $scope.username = 'officialjaden';
         // temp until tweets gets fixed
         $scope.tweets = ["Yeah Your Girl Is Bad But She Doesn't Smile.", "That Moment When Peeing Feels So Good You Start Crying."];
-        $scope.image;
+        $scope.image = null;
         $scope.showImages = false;
         $scope.justify = "CENTER";
         $scope.tweetCount =0;
-        $scope.tempTweets;
+        $scope.tempTweets = null;
         $scope.keys = [];
         $scope.cache = $cacheFactory('userTweets');
 
