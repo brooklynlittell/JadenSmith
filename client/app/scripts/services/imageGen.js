@@ -1,4 +1,4 @@
-'use strict';
+//'use strict';
 
 angular.module('jadenSmithApp')
 .service('generateImage', ['getHex', 'invertColor', 'getX', 'getInverseColor', function(getHex, invertColor, getX, getInverseColor) {
