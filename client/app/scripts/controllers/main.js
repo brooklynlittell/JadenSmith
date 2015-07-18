@@ -28,8 +28,8 @@ and $tweetCount
 
 var app = angular.module('jadenSmithApp');
 
-app.controller('MainCtrl', ['$scope', '$rootScope','$resource','$window','$cacheFactory','getTweets', 'getImage', 'generateImage', 
-    function ($scope, $rootScope, $resource, $window, $cacheFactory, getTweets, getImage, generateImage) {
+app.controller('MainCtrl', ['$scope', '$rootScope','$resource','$window','getTweets', 'getImage', 'generateImage', 
+    function ($scope, $rootScope, $resource, $window, getTweets, getImage, generateImage) {
         $scope.username = 'officialjaden';
         // temp until tweets gets fixed
         $scope.tweets = ["Yeah Your Girl Is Bad But She Doesn't Smile.", "That Moment When Peeing Feels So Good You Start Crying."];
@@ -37,8 +37,6 @@ app.controller('MainCtrl', ['$scope', '$rootScope','$resource','$window','$cache
         $scope.justify = "CENTER";
         $scope.tweetCount =0;
         $scope.tempTweets = null;
-        $scope.keys = [];
-        $scope.cache = $cacheFactory('userTweets');
         $scope.imageCount = 0;
         $scope.imageStatus = '';
         $scope.timer;
@@ -46,22 +44,12 @@ app.controller('MainCtrl', ['$scope', '$rootScope','$resource','$window','$cache
         $scope.onSearch = function() {
             $scope.timer = new Date();
             $scope.imageStatus = 'loading.....'
-            // cache tweets when possible
-            if ($scope.cache.get($scope.username) === undefined) {
-                // async stuff (slightly broken for images)
-                $scope.tweetCount = 0;
-                getTweets($scope.username).then(function(tweets){
-                    $scope.keys.push($scope.username);
-                    $scope.cache.put($scope.username, tweets);
-                    $scope.tempTweets = tweets;
-                    $scope.newImage();
-                });
-            }
-            else {
-                console.log("tweets were cached");
-                $scope.tempTweets = $scope.cache.get($scope.username);
+            // async stuff (slightly broken for images)
+            $scope.tweetCount = 0;
+            getTweets($scope.username).then(function(tweets){
+                $scope.tempTweets = tweets;
                 $scope.newImage();
-            }
+            });
         };
         // Events
         $scope.onNewImage = function(tweet){
