@@ -116,7 +116,7 @@
         
     };
     console.log("searching for tweets");
-    twitter.getUserTimeline({ screen_name: _id, count: '100',
+    twitter.getUserTimeline({ screen_name: _id, count: '20',
     exclude_replies: true, include_rts: false}, error, success);
 });
 
