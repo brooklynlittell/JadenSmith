@@ -93,8 +93,16 @@ angular.module('jadenSmithApp')
     }
 
     return function(tweetText, imageSrc, authorText, justify, count) {
-        init(count);
-        generate(tweetText, authorText, imageSrc, justify);
+        //init(count);
+        //generate(tweetText, authorText, imageSrc, justify);
+        
+        var imageObj = {};
+        imageObj.tweet = tweetText;
+        imageObj.image = imageSrc;
+        imageObj.author = authorText;
+        imageObj.justify = justify;
+        
+        return imageObj;
     };
 }]);
 
