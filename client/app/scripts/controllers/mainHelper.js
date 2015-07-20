@@ -7,7 +7,7 @@
 var app = angular.module('jadenSmithApp');
 
 // on page load 
-app.run(function ($rootScope, getImage){
+app.run(function ($rootScope, $location, getImage){
     getImage().then(function(data){
         $rootScope.image = data;
         console.log("Found images");

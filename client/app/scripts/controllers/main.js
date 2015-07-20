@@ -28,9 +28,9 @@ and $tweetCount
 
 var app = angular.module('jadenSmithApp');
 
-app.controller('MainCtrl', ['$scope', '$rootScope','$resource','$window','getTweets', 'getImage', 'generateImage', 
-    function ($scope, $rootScope, $resource, $window, getTweets, getImage, generateImage) {
-        $scope.username = 'officialjaden';
+app.controller('MainCtrl', ['$scope', '$rootScope','$resource','$location','$window','getTweets', 'getImage', 'generateImage', 
+    function ($scope, $rootScope, $resource, $location, $window, getTweets, getImage, generateImage) {
+        $rootScope.username = 'officialjaden';
         // temp until tweets gets fixed
         $scope.tweets = ["Yeah Your Girl Is Bad But She Doesn't Smile.", "That Moment When Peeing Feels So Good You Start Crying."];
         $scope.showImages = false;
@@ -41,12 +41,22 @@ app.controller('MainCtrl', ['$scope', '$rootScope','$resource','$window','getTwe
         $scope.imageStatus = '';
         $scope.timer;
 
+        $scope.searchIfParams = function(){
+            var urlParam = $location.search().username;
+            if(urlParam){
+                $scope.username = urlParam;
+                $scope.onSearch();
+            }
+        }
         $scope.onSearch = function() {
+            $rootScope.username = $scope.username;
+            console.log($rootScope.username)
+            $location.search('username', $rootScope.username);
             $scope.timer = new Date();
             $scope.imageStatus = 'loading.....'
             // async stuff (slightly broken for images)
             $scope.tweetCount = 0;
-            getTweets($scope.username).then(function(tweets){
+            getTweets($rootScope.username).then(function(tweets){
                 $scope.tempTweets = tweets;
                 $scope.newImage();
             });
@@ -61,7 +71,7 @@ app.controller('MainCtrl', ['$scope', '$rootScope','$resource','$window','getTwe
         $scope.onNewJustify = function(justify, tweet){
             console.log("Generating new justification " + justify + " for " + tweet);
             $scope.justify = justify;
-            generateImage(tweet, $rootScope.image[$scope.imageCount], $scope.username, $scope.justify, 0);
+            generateImage(tweet, $rootScope.image[$scope.imageCount], $rootScope.username, $scope.justify, 0);
         };
         
         $scope.onDownload = function(id){
@@ -90,7 +100,7 @@ app.controller('MainCtrl', ['$scope', '$rootScope','$resource','$window','getTwe
         // actually calling the image generation class
         $scope.drawImage = function(){
             $scope.imageStatus = ''
-            generateImage($scope.tempTweets[$scope.tweetCount], $rootScope.image[$scope.imageCount], $scope.username, $scope.justify, 0);
+            generateImage($scope.tempTweets[$scope.tweetCount], $rootScope.image[$scope.imageCount], $rootScope.username, $scope.justify, 0);
             $scope.imageStatus = ''
             $scope.showImages = true;
             $scope.tweetCount++;
@@ -98,5 +108,7 @@ app.controller('MainCtrl', ['$scope', '$rootScope','$resource','$window','getTwe
             console.log("Request handeled in " + $scope.timer + " milliseconds");            
 
         };
+        $scope.searchIfParams();
+
     }
 ]);
