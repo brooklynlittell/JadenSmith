@@ -11,6 +11,8 @@ angular.module('jadenSmithApp')
 			});
 			console.log("Found " + tweets.length + " tweets ");
 			return tweets;
+		}, function(error){
+			console.log("User not found");
 		});
 	 };
  }]);
