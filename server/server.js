@@ -73,17 +73,29 @@
     data.caching = "Total Queries In Cache " + totalCache + " Total Queries  " + totalQueries;
     res.send(data);
   }) 
-  app.get('/api/tweets/:user?/', function(req, res) {
+  app.get('/api/tweets/:user/:page', function(req, res) {
     var tweets = {};
-    var _id  = req.query.user;
+    var _id  = req.params.user;
+    var _page  = req.params.page;
     console.log(req.route);
-    console.log(req.query.user);
+    console.log(_id + " " + _page);
     totalQueries++;
     value = tweetsCache.get( _id );
     if ( value ){
         totalCache++;
         console.log("Tweet found in cache");
-        res.json(value);
+        if (_page > 0){
+            var newTweets = {};
+            for(tweet in value.tweets){
+                if (tweet > _page) newTweets[tweet] = value.tweets[tweet];
+            }
+            var response = new Object();
+            response.tweets = newTweets;
+            res.json(response);
+        }
+        else{
+            res.json(value);
+        }
         return;
     }
     //Get this data from your twitter apps dashboard
@@ -113,7 +125,7 @@
             success = tweetsCache.set( _id, response, 10000 );
             console.log("sending tweets");
             res.json(response);
-            twitter.getUserTimeline({ screen_name: _id, count: '100',
+            twitter.getUserTimeline({ screen_name: _id, count: '200',
                 exclude_replies: true, include_rts: false}, error, successPage2);
         
     };

@@ -99,6 +99,14 @@ app.controller('MainCtrl', ['$scope', '$rootScope','$resource','$location','$win
         };
         // actually calling the image generation class
         $scope.drawImage = function(){
+            if($scope.tweetCount >= $scope.tempTweets.length){
+                console.log("Fetching more tweets");
+                getTweets($rootScope.username).then(function(tweets){
+                    $scope.tweetCount = 0;
+                    $scope.tempTweets = tweets;
+                    $scope.drawImage();
+                });
+            }
             $scope.imageStatus = ''
             generateImage($scope.tempTweets[$scope.tweetCount], $rootScope.image[$scope.imageCount], $rootScope.username, $scope.justify, 0);
             $scope.imageStatus = ''
