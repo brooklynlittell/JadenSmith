@@ -1,33 +1,16 @@
 {
-  "name": "node-js-getting-started",
-  "version": "0.1.4",
-  "description": "A sample Node.js app using Express 4",
-  "main": "server.js",
-  "scripts": {
-    "start": "node server.js"
-  },
-  "dependencies": {
-    "ejs": "^2.3.1",
-    "express": "~4.9.x",
-    "mongoose"   : "~3.6.2",
+  "name"         : "Jaden-Smith",
+  "version"      : "0.0.0",
+  "description"  : "Inspiratinoal posters for your tweets",
+  "main"         : "server.js",
+  "author"       : "jlamere and brandonlittell",
+  "dependencies" : {
+    "express"    : "~4.7.2",
     "morgan"     : "~1.2.2",
     "body-parser": "~1.5.2",
-    "method-override": "~2.1.2",
     "instagram-node": "0.5.7",
     "twitter-node-client": "0.0.6",
-    "cors": "2.7.1"
-  },
-  "engines": {
-    "node": "0.12.2"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/heroku/node-js-getting-started"
-  },
-  "keywords": [
-    "node",
-    "heroku",
-    "express"
-  ],
-  "license": "MIT"
+    "cors": "2.7.1",
+    "node-cache": "3.0.0"
+    }
 }
