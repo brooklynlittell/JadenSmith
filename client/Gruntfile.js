@@ -117,6 +117,22 @@ module.exports = function (grunt) {
         }
       }
     },
+    
+    less: {
+     development: {
+         options: {
+             paths: ["app/styles"]
+         },
+         files: {"app/styles/main.css": "app/styles/main.less"}
+     },
+     production: {
+        options: {
+             paths: ["app/styles"],
+             cleancss: true
+        },
+        files: {"app/styles/main.css": "app/styles/main.less"}
+     }
+    },
 
     // Make sure code styles are up to par and there are no obvious mistakes
     jshint: {
@@ -402,6 +418,9 @@ module.exports = function (grunt) {
       }
     }
   });
+  
+  grunt.loadNpmTasks('grunt-contrib-less');
+  grunt.registerTask('default', ['less']);
 
 
   grunt.registerTask('serve', 'Compile then start a connect web server', function (target) {
