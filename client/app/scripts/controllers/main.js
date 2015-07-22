@@ -59,7 +59,7 @@ app.controller('MainCtrl', ['$scope', '$rootScope','$resource','$window','getTwe
                 $scope.tempTweets = tweets;
                 for (var tweet in tweets)
                 {
-                    $scope.newImage(tweet);
+                    $scope.newImage(tweets[tweet]);
                 }
                 //$scope.newImage();
             });
@@ -68,7 +68,7 @@ app.controller('MainCtrl', ['$scope', '$rootScope','$resource','$window','getTwe
         $scope.onNewImage = function(tweet){
             $scope.timer = new Date();
             console.log("Generating new image for " + tweet);
-            $scope.newImage();
+            $scope.newImage(tweet);
         };
 
         $scope.onNewJustify = function(justify, tweet){
@@ -104,7 +104,7 @@ app.controller('MainCtrl', ['$scope', '$rootScope','$resource','$window','getTwe
             $scope.drawImage(tweet);
         };
         // actually calling the image generation class
-        $scope.drawImage = function(){
+        $scope.drawImage = function(tweet){
             /*
             $scope.imageStatus = ''
             generateImage($scope.tempTweets[$scope.tweetCount], $rootScope.image[$scope.imageCount], $scope.username, $scope.justify, 0);
@@ -115,7 +115,8 @@ app.controller('MainCtrl', ['$scope', '$rootScope','$resource','$window','getTwe
             console.log("Request handeled in " + $scope.timer + " milliseconds");            
             */
             console.log("drawImage");
-            $scope.imageList.push(generateImage($scope.tempTweets[/*$scope.tweetCount*/0], $rootScope.image[$scope.imageCount], $scope.username, $scope.justify, 0));
+            $scope.imageList.push(generateImage(tweet, $rootScope.image[$scope.imageCount], $scope.username, $scope.justify, 0));
+            $scope.imageCount ++;
             $scope.showImages = true;
         };
     }
