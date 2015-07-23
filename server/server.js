@@ -126,11 +126,10 @@ function checkTweetCache(_id, _page, res){
                 // map text -> count (weight can be used later to pull good tweets)
                 tweets[tweet] = data[tweet].text;
                 count++;
-                console.log("Count + " + count);
                 if(count >= 4) break;
             } 
         }
-        console.log(tweets);
+        console.log("R1 " + JSON.stringify(tweets))
         response.tweets = tweets;
         res.json(response);
 
@@ -140,14 +139,16 @@ function checkTweetCache(_id, _page, res){
         
     };
      var successPage2 = function (data) {
+        console.log("Got page 2 of tweets");
         data = JSON.parse(data);
         for(tweet in data){
             if(data[tweet].text.indexOf("http") == -1){
                 tweets[tweet] = data[tweet].text;
             } 
         }
+            console.log("R2 " + JSON.stringify(tweets))
             response.tweets = tweets;
-            success = tweetsCache.set( _id, response, 10000 );        
+            success = tweetsCache.set( _id, response, 10000 );  
     };
 
     console.log("searching for tweets");
