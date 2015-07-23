@@ -40,7 +40,7 @@ app.controller('MainCtrl', ['$scope','$rootScope','$resource','$location','$wind
         $scope.tempTweets = [];
         $scope.imageCount = 0;
         $scope.imageStatus = '';
-        $scope.imageStatusEnd = '';
+        $scope.imageStatusEnd = false;
         $scope.timer;
         $scope.imageList = new Array();
        
@@ -80,7 +80,7 @@ app.controller('MainCtrl', ['$scope','$rootScope','$resource','$location','$wind
             getTweets($rootScope.username).then(function(tweets){
                 $scope.tempTweets = $scope.tempTweets.concat(tweets);
                 if (tweets.length === 0){
-                    $scope.imageStatusEnd = "NO MORE TWEETS";
+                    $scope.imageStatusEnd = true;
                 }
                 for (var tweet in tweets)
                 {

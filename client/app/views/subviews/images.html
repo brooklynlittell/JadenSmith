@@ -1,10 +1,4 @@
-<div class="ui negative message" ng-hide = "imageStatusEnd">
-  <i class="close icon"></i>
-  <div class="header">
-    We're sorry we can't apply that discount
-  </div>
-  <p>That offer has expired
-</p></div>
+
 <div id="images" ng-show="showImages">
 	<div ng-repeat="tweet in imageList">
 		<div image></div>
@@ -12,3 +6,9 @@
 </div>
 <div infinite-scroll="moreTweets()" infinite-scroll-distance="3"></div>
 <br><br>
+<div class="ui negative message" ng-show = "imageStatusEnd">
+  <i class="close icon"></i>
+  <div class="header">
+    No More Tweets
+  </div>
+</p></div>

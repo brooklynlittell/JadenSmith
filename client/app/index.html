@@ -13,9 +13,8 @@
   <script src="http://code.jquery.com/jquery.js"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- Latest compiled and minified CSS -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <link rel="stylesheet" href="bower_components/semantic-ui/dist/semantic.min.css" />
    <!-- Optional theme -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
   <link rel="stylesheet" href="styles/main.css"/>
 
   <!-- Latest compiled and minified JavaScript -->
@@ -36,27 +35,17 @@
   <![endif]-->
 
   <!-- Add your site or application content here -->
-
-  <nav class="navbar navbar-default">
-    <div class="container-fluid">
-      <!-- Brand and toggle get grouped for better mobile display -->
-      <div class="navbar-header">
-        <a class="navbar-brand" href="#/">Jaden Smith</a>
+  <div class="header">
+    <div class="ui menu">
+      <div class="item">
+        JadenSmith
       </div>
-      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-        <ul class="nav navbar-nav">
-          <li><a class="item" href="#/">Home</a></li>
-          <li><a class="item" href="#/about">About</a></li>
-        </ul>
-        </div>
-      </div>
+      <a class="item" href="#/">Home</a>
+      <a class="item" href="#/about">About</a>
+    </div>
+  </div>
 
-      </div><!-- /.navbar-collapse -->
-    </div><!-- /.container-fluid -->
-  </nav>
-
-
-  <div class="container">
+  <div class="ui container center aligned">
     <div ng-view=""></div>
   </div>
 

@@ -3,13 +3,15 @@
   position: relative;
   width: 600px;
   height: 600px;
+  margin: 0 auto;
   margin-bottom: 20px;
+  overflow: hidden;
 }
 .poster img {
   position: absolute;
   width: 600px;
   height: 600px;
-  z-index: 0;
+  left: 0;
 }
 .poster .text {
   display: block;
