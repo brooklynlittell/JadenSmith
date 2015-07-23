@@ -28,13 +28,6 @@ and $tweetCount
 
 var app = angular.module('jadenSmithApp');
 
-// on page load 
-app.run(function ($rootScope, $location, getImages){
-    getImages().then(function(data){
-        $rootScope.image = data;
-        console.log("Found images");
-    });
-});
 
 app.controller('MainCtrl', ['$scope','$rootScope','$resource','$location','$window','getTweets','getImages','generateImage', 
     function ($scope, $rootScope, $resource, $location, $window, getTweets, getImages, generateImage) {
@@ -49,12 +42,24 @@ app.controller('MainCtrl', ['$scope','$rootScope','$resource','$location','$wind
         $scope.imageStatus = '';
         $scope.timer;
         $scope.imageList = new Array();
-
+       
+        $scope.init = function(){
+        getImages().then(function(data){
+            $rootScope.image = data;
+            console.log("Found images");
+            var urlParam = $location.search().username;
+            if(urlParam){
+                $scope.username = urlParam;
+                $scope.onSearch();
+                }  
+            });
+        }
         $scope.onSearch = function() {
             $scope.tweetCount  = 0;
             $scope.tempTweets = null;
             $scope.imageList = [];
             $rootScope.username = $scope.username;
+            $location.search('username', $rootScope.username);
             $scope.timer = new Date();
             $scope.imageStatus = 'loading.....'
             // async stuff (slightly broken for images)
@@ -148,7 +153,10 @@ app.controller('MainCtrl', ['$scope','$rootScope','$resource','$location','$wind
         };
     }
 ]);
-
+// on page load 
+app.run(function ($rootScope, $location, getImages){
+   
+});
 // Templates
 app.subviewPath = '../../views/subviews/';
 app.directive('images', function() {
