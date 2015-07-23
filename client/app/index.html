@@ -16,6 +16,7 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
    <!-- Optional theme -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="styles/main.css"/>
 
   <!-- Latest compiled and minified JavaScript -->
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
@@ -76,6 +77,7 @@
 <script src="bower_components/angular-touch/angular-touch.js"></script>
 <script src="bower_components/semantic-ui/dist/semantic.js"></script>
 <script src="bower_components/color-thief/src/color-thief.js"></script>
+<script src="bower_components/less/dist/less.js"></script>
 <!-- endbower -->
 <!-- endbuild -->
 
@@ -83,11 +85,10 @@
 <!-- build:js({.tmp,app}) scripts/scripts.js -->
 <script src="scripts/app.js"></script>
 <script src="scripts/controllers/main.js"></script>
-<script src="scripts/controllers/mainHelper.js"></script>
 <script src="scripts/controllers/about.js"></script>
-<script src="scripts/services/twitter.js"></script>
-<script src="scripts/services/images.js"></script>
-<script src="scripts/services/imageGen.js"></script>
+<script src="scripts/services/getTweets.js"></script>
+<script src="scripts/services/getImages.js"></script>
+<script src="scripts/services/generateImage.js"></script>
 <script src="scripts/services/imageGenHelper.js"></script>
 
 <!-- endbuild -->

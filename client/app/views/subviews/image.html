@@ -1,6 +1,7 @@
-Tweet #{{$index}} "{{tweet}}"
-<br>
- <canvas id="myCanvas{{$index}}" width="600" height="600"></canvas>
-<br>
-<div editimage></div>
-
+<div class="poster">
+    <img src="{{tweet.image}}" />
+    <div class="text">
+        <p>{{tweet.tweet}}</p>
+    </div>
+    <!--<div editimage></div>-->
+</div>

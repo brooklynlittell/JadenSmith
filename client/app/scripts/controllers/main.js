@@ -28,18 +28,27 @@ and $tweetCount
 
 var app = angular.module('jadenSmithApp');
 
-app.controller('MainCtrl', ['$scope', '$rootScope','$resource','$location','$window','getTweets', 'getImage', 'generateImage', 
-    function ($scope, $rootScope, $resource, $location, $window, getTweets, getImage, generateImage) {
+// on page load 
+app.run(function ($rootScope, $location, getImages){
+    getImages().then(function(data){
+        $rootScope.image = data;
+        console.log("Found images");
+    });
+});
+
+app.controller('MainCtrl', ['$scope','$rootScope','$resource','$location','$window','getTweets','getImages','generateImage', 
+    function ($scope, $rootScope, $resource, $location, $window, getTweets, getImages, generateImage) {
         $rootScope.username = 'officialjaden';
         // temp until tweets gets fixed
         $scope.tweets = ["Yeah Your Girl Is Bad But She Doesn't Smile.", "That Moment When Peeing Feels So Good You Start Crying."];
         $scope.showImages = false;
         $scope.justify = "CENTER";
-        $scope.tweetCount =0;
+        $scope.tweetCount = 0;
         $scope.tempTweets = null;
         $scope.imageCount = 0;
         $scope.imageStatus = '';
         $scope.timer;
+        $scope.imageList = new Array();
 
         $scope.searchIfParams = function(){
             var urlParam = $location.search().username;
@@ -58,14 +67,18 @@ app.controller('MainCtrl', ['$scope', '$rootScope','$resource','$location','$win
             $scope.tweetCount = 0;
             getTweets($rootScope.username).then(function(tweets){
                 $scope.tempTweets = tweets;
-                $scope.newImage();
+                for (var tweet in tweets)
+                {
+                    $scope.newImage(tweets[tweet]);
+                }
+                //$scope.newImage();
             });
         };
         // Events
         $scope.onNewImage = function(tweet){
             $scope.timer = new Date();
             console.log("Generating new image for " + tweet);
-            $scope.newImage();
+            $scope.newImage(tweet);
         };
 
         $scope.onNewJustify = function(justify, tweet){
@@ -74,31 +87,35 @@ app.controller('MainCtrl', ['$scope', '$rootScope','$resource','$location','$win
             generateImage(tweet, $rootScope.image[$scope.imageCount], $rootScope.username, $scope.justify, 0);
         };
         
-        $scope.onDownload = function(id){
+        $scope.onDownload = function(id) {
             console.log(id);
             var dataURL = document.getElementById(id).toDataURL('image/png');
             $window.open(dataURL, '_blank');
         };
 
         // pulls the next image, or queries for more images, if necessary
-        $scope.newImage = function (){
-          // if we need to get more images
-          if ($scope.imageCount >= Object.keys($rootScope.image).length - 1 ){
-            console.log("No more images. Querying for more.");
-            getImage().then(function(data){
-              $rootScope.image = data;
-              console.log("Found images");
-              $scope.imageCount = 0;
-              $scope.drawImage();
-            });
-          }
-          else{
-            $scope.imageCount++;
-            $scope.drawImage();
-          }
+        $scope.newImage = function(tweet) {
+            /*
+            // if we need to get more images
+            if ($scope.imageCount >= Object.keys($rootScope.image).length - 1 ) {
+                console.log("No more images. Querying for more.");
+                getImages().then(function(data) {
+                    $rootScope.image = data;
+                    console.log("Found images");
+                    $scope.imageCount = 0;
+                    $scope.drawImage(tweet);
+                });
+            }
+            else {
+                $scope.imageCount++;
+                $scope.drawImage(tweet);
+            }
+            */
+            $scope.drawImage(tweet);
         };
         // actually calling the image generation class
-        $scope.drawImage = function(){
+        $scope.drawImage = function(tweet){
+            /*
             if($scope.tweetCount >= $scope.tempTweets.length){
                 console.log("Fetching more tweets");
                 getTweets($rootScope.username).then(function(tweets){
@@ -107,6 +124,7 @@ app.controller('MainCtrl', ['$scope', '$rootScope','$resource','$location','$win
                     $scope.drawImage();
                 });
             }
+            
             $scope.imageStatus = ''
             generateImage($scope.tempTweets[$scope.tweetCount], $rootScope.image[$scope.imageCount], $rootScope.username, $scope.justify, 0);
             $scope.imageStatus = ''
@@ -114,9 +132,33 @@ app.controller('MainCtrl', ['$scope', '$rootScope','$resource','$location','$win
             $scope.tweetCount++;
             $scope.timer = new Date() - $scope.timer;
             console.log("Request handeled in " + $scope.timer + " milliseconds");            
-
+            */
+            console.log("drawImage");
+            $scope.imageList.push(generateImage(tweet, $rootScope.image[$scope.imageCount], $scope.username, $scope.justify, 0));
+            $scope.imageCount ++;
+            $scope.showImages = true;
         };
         $scope.searchIfParams();
 
     }
 ]);
+
+// Templates
+app.subviewPath = '../../views/subviews/';
+app.directive('images', function() {
+    return {
+        templateUrl: app.subviewPath + 'images.html'
+    };
+});
+
+app.directive('image', function() {
+    return {
+        templateUrl: app.subviewPath + 'image.html'
+    };
+});
+
+app.directive('editimage', function() {
+    return {
+        templateUrl: app.subviewPath + 'editImage.html'
+    };
+});
