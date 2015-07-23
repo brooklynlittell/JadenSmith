@@ -50,16 +50,11 @@ app.controller('MainCtrl', ['$scope','$rootScope','$resource','$location','$wind
         $scope.timer;
         $scope.imageList = new Array();
 
-        $scope.searchIfParams = function(){
-            var urlParam = $location.search().username;
-            if(urlParam){
-                $scope.username = urlParam;
-            }
-        }
         $scope.onSearch = function() {
-            console.log("SEARCHING");
+            $scope.tweetCount  = 0;
+            $scope.tempTweets = null;
+            $scope.imageList = [];
             $rootScope.username = $scope.username;
-            $location.search('username', $rootScope.username);
             $scope.timer = new Date();
             $scope.imageStatus = 'loading.....'
             // async stuff (slightly broken for images)
@@ -148,10 +143,9 @@ app.controller('MainCtrl', ['$scope','$rootScope','$resource','$location','$wind
             console.log("drawImage");
             $scope.imageList.push(generateImage(tweet, $rootScope.image[$scope.imageCount], $scope.username, $scope.justify, 0));
             $scope.imageCount ++;
+            $scope.imageStatus = '';
             $scope.showImages = true;
         };
-        $scope.searchIfParams();
-
     }
 ]);
 
