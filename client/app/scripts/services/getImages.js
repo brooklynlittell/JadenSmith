@@ -19,7 +19,6 @@ angular.module('jadenSmithApp')
             newPageNumber = newPageNumber > 5 ? 0 : newPageNumber;
             localStorage.setItem("pageNumber", newPageNumber.toString());
         }
-        
         imageList = $resource("http://localhost:8080/api/images?page=" + localStorage.getItem("pageNumber")).get();
         
         return imageList.$promise.then(function (result) {

@@ -54,19 +54,32 @@ app.controller('MainCtrl', ['$scope','$rootScope','$resource','$location','$wind
             var urlParam = $location.search().username;
             if(urlParam){
                 $scope.username = urlParam;
-                $scope.onSearch();
             }
         }
         $scope.onSearch = function() {
+            console.log("SEARCHING");
             $rootScope.username = $scope.username;
-            console.log($rootScope.username)
             $location.search('username', $rootScope.username);
             $scope.timer = new Date();
             $scope.imageStatus = 'loading.....'
             // async stuff (slightly broken for images)
             $scope.tweetCount = 0;
+            console.log("Getting tweets");
             getTweets($rootScope.username).then(function(tweets){
                 $scope.tempTweets = tweets;
+                for (var tweet in tweets)
+                {
+                    $scope.newImage(tweets[tweet]);
+                }
+                //$scope.newImage();
+            });
+        };
+        $scope.moreTweets = function() {
+            $scope.timer = new Date();
+            $scope.imageStatus = 'loading.....'
+            // async stuff (slightly broken for images)
+            getTweets($rootScope.username).then(function(tweets){
+                $scope.tempTweets += tweets;
                 for (var tweet in tweets)
                 {
                     $scope.newImage(tweets[tweet]);
@@ -88,7 +101,6 @@ app.controller('MainCtrl', ['$scope','$rootScope','$resource','$location','$wind
         };
         
         $scope.onDownload = function(id) {
-            console.log(id);
             var dataURL = document.getElementById(id).toDataURL('image/png');
             $window.open(dataURL, '_blank');
         };

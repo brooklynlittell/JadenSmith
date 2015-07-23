@@ -1,13 +1,16 @@
 'use strict';
 var pageCount = 0;
+var lastUser = "";
 angular.module('jadenSmithApp')
 .factory('getTweets', ['$resource', function($resource) {
 	return function(user) {
+		if(user != lastUser) pageCount = 0;
+		lastUser = user;
+		console.log("querying at " + "http://localhost:8080/api/tweets/" + user + "/" + pageCount);
 		return $resource("http://localhost:8080/api/tweets/" + user + "/" + pageCount).get()
 		.$promise.then(function(data) {
 			console.log("Fetching tweets for " + user);
-			pageCount = Object.keys(data.tweets);
-			pageCount = pageCount[pageCount.length-1]
+			pageCount++;
 			var tweets = Object.keys(data.tweets).map(function (key){
 				return data.tweets[key];
 			});
