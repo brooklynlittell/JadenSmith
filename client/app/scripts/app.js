@@ -16,13 +16,14 @@ angular
     'ngRoute',
     'ngSanitize',
     'ngTouch',
+    'infinite-scroll'
 ])
 .config(function ($routeProvider) {
     $routeProvider
         .when('/', {
             templateUrl: 'views/main.html',
             controller: 'MainCtrl',
-            controllerAs: 'main'
+            controllerAs: 'main',
         })
         .when('/about', {
             templateUrl: 'views/about.html',

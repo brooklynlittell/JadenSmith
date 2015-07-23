@@ -1,5 +1,14 @@
+
 <div id="images" ng-show="showImages">
 	<div ng-repeat="tweet in imageList">
 		<div image></div>
  	</div>
 </div>
+<div infinite-scroll="moreTweets()" infinite-scroll-distance="1"></div>
+<br><br>
+<div class="ui negative message" ng-show = "imageStatusEnd">
+  <i class="close icon"></i>
+  <div class="header">
+    No More Tweets
+  </div>
+</p></div>

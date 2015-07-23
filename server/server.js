@@ -30,8 +30,7 @@
 
     var totalCache = 0;
     var totalQueries = 0;
-// routes ======================================================================
-
+    // routes ======================================================================
     // api ---------------------------------------------------------------------
     // get all todos
     app.get('/api/images/:page?', function(req, res) {
@@ -73,31 +72,38 @@
     data.caching = "Total Queries In Cache " + totalCache + " Total Queries  " + totalQueries;
     res.send(data);
   }) 
+function checkTweetCache(_id, _page, res){
+  var response = new Object();
+  value = tweetsCache.get( _id );
+    if ( value ){
+        totalCache++;
+        console.log("Tweet found in cache");
+        var newTweets = {};
+        var tweetCount = 0;
+        var page = _page * 5
+        for(tweet in value.tweets){
+            if (tweetCount > page && tweetCount <=parseInt((page) + 5)){
+                newTweets[tweet] = value.tweets[tweet];
+            }
+            if(tweetCount > parseInt((page) + 5)) break;
+            tweetCount++;
+        }
+        response.tweets = newTweets;
+        response.length = Object.keys(newTweets).length
+        console.log("Sending tweets");
+        res.json(response);
+        return true;
+    }  
+}
   app.get('/api/tweets/:user/:page', function(req, res) {
     var tweets = {};
     var _id  = req.params.user;
     var _page  = req.params.page;
-    console.log(req.route);
-    console.log(_id + " " + _page);
+    var response = new Object();
+
+    console.log("Username : " + _id + " page : " + _page);
     totalQueries++;
-    value = tweetsCache.get( _id );
-    if ( value ){
-        totalCache++;
-        console.log("Tweet found in cache");
-        if (_page > 0){
-            var newTweets = {};
-            for(tweet in value.tweets){
-                if (tweet > _page) newTweets[tweet] = value.tweets[tweet];
-            }
-            var response = new Object();
-            response.tweets = newTweets;
-            res.json(response);
-        }
-        else{
-            res.json(value);
-        }
-        return;
-    }
+    if(checkTweetCache(_id, _page, res)) return;
     //Get this data from your twitter apps dashboard
     var conf = {
         "consumerKey": config.twitterkey,
@@ -109,42 +115,42 @@
     var error = function (err, response, body) {
         res.status(404).send('Not found');
     };
+
     var success = function (data) {
         // make response pretty
         data = JSON.parse(data);
+        var count = 0;
         for(tweet in data){
             // ignore tweets with a URL in it
             if(data[tweet].text.indexOf("http") == -1){
                 // map text -> count (weight can be used later to pull good tweets)
                 tweets[tweet] = data[tweet].text;
-
+                count++;
+                if(count >= 4) break;
             } 
         }
-            var response = new Object();
-            response.tweets = tweets;
-            success = tweetsCache.set( _id, response, 10000 );
-            console.log("sending tweets");
-            res.json(response);
-            twitter.getUserTimeline({ screen_name: _id, count: '200',
-                exclude_replies: true, include_rts: false}, error, successPage2);
+        console.log("R1 " + JSON.stringify(tweets))
+        response.tweets = tweets;
+        res.json(response);
+
+        success = tweetsCache.set( _id, response, 10000 );
+        twitter.getUserTimeline({ screen_name: _id, count: '200',
+            exclude_replies: true, include_rts: false}, error, successPage2);
         
     };
      var successPage2 = function (data) {
-        // make response pretty
+        console.log("Got page 2 of tweets");
         data = JSON.parse(data);
         for(tweet in data){
-            // ignore tweets with a URL in it
             if(data[tweet].text.indexOf("http") == -1){
-                // map text -> count (weight can be used later to pull good tweets)
                 tweets[tweet] = data[tweet].text;
-
             } 
         }
-            var response = new Object();
+            console.log("R2 " + JSON.stringify(tweets))
             response.tweets = tweets;
-            success = tweetsCache.set( _id, response, 10000 );
-        
+            success = tweetsCache.set( _id, response, 10000 );  
     };
+
     console.log("searching for tweets");
     twitter.getUserTimeline({ screen_name: _id, count: '20',
     exclude_replies: true, include_rts: false}, error, success);
