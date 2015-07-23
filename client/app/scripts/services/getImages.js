@@ -5,9 +5,12 @@ angular.module('jadenSmithApp')
     return function(){
         console.log("Searching for images");
         var imageList;
+        var refresh = (new Date().getTime() - localStorage.getItem("timestamp")) >= 900000;
         
-        if (!localStorage.getItem("pageNumber")) { 
+        if (!localStorage.getItem("pageNumber" || refresh )) { 
             localStorage.setItem("pageNumber", "0");
+            localStorage.setItem("timestamp", new Date().getTime());
+            console.log("Page number reset");
         }
         else {
             var newPageNumber = localStorage.getItem("pageNumber");

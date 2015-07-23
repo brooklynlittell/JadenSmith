@@ -29,16 +29,16 @@ and $tweetCount
 var app = angular.module('jadenSmithApp');
 
 // on page load 
-app.run(function ($rootScope, getImages){
+app.run(function ($rootScope, $location, getImages){
     getImages().then(function(data){
         $rootScope.image = data;
         console.log("Found images");
     });
 });
 
-app.controller('MainCtrl', ['$scope', '$rootScope','$resource','$window','getTweets', 'getImages', 'generateImage', 
-    function ($scope, $rootScope, $resource, $window, getTweets, getImages, generateImage) {
-        $scope.username = 'officialjaden';
+app.controller('MainCtrl', ['$scope','$rootScope','$resource','$location','$window','getTweets','getImages','generateImage', 
+    function ($scope, $rootScope, $resource, $location, $window, getTweets, getImages, generateImage) {
+        $rootScope.username = 'officialjaden';
         // temp until tweets gets fixed
         $scope.tweets = ["Yeah Your Girl Is Bad But She Doesn't Smile.", "That Moment When Peeing Feels So Good You Start Crying."];
         $scope.showImages = false;
@@ -50,12 +50,22 @@ app.controller('MainCtrl', ['$scope', '$rootScope','$resource','$window','getTwe
         $scope.timer;
         $scope.imageList = new Array();
 
+        $scope.searchIfParams = function(){
+            var urlParam = $location.search().username;
+            if(urlParam){
+                $scope.username = urlParam;
+                $scope.onSearch();
+            }
+        }
         $scope.onSearch = function() {
+            $rootScope.username = $scope.username;
+            console.log($rootScope.username)
+            $location.search('username', $rootScope.username);
             $scope.timer = new Date();
             $scope.imageStatus = 'loading.....'
             // async stuff (slightly broken for images)
             $scope.tweetCount = 0;
-            getTweets($scope.username).then(function(tweets){
+            getTweets($rootScope.username).then(function(tweets){
                 $scope.tempTweets = tweets;
                 for (var tweet in tweets)
                 {
@@ -74,7 +84,7 @@ app.controller('MainCtrl', ['$scope', '$rootScope','$resource','$window','getTwe
         $scope.onNewJustify = function(justify, tweet){
             console.log("Generating new justification " + justify + " for " + tweet);
             $scope.justify = justify;
-            generateImage(tweet, $rootScope.image[$scope.imageCount], $scope.username, $scope.justify, 0);
+            generateImage(tweet, $rootScope.image[$scope.imageCount], $rootScope.username, $scope.justify, 0);
         };
         
         $scope.onDownload = function(id) {
@@ -106,8 +116,17 @@ app.controller('MainCtrl', ['$scope', '$rootScope','$resource','$window','getTwe
         // actually calling the image generation class
         $scope.drawImage = function(tweet){
             /*
+            if($scope.tweetCount >= $scope.tempTweets.length){
+                console.log("Fetching more tweets");
+                getTweets($rootScope.username).then(function(tweets){
+                    $scope.tweetCount = 0;
+                    $scope.tempTweets = tweets;
+                    $scope.drawImage();
+                });
+            }
+            
             $scope.imageStatus = ''
-            generateImage($scope.tempTweets[$scope.tweetCount], $rootScope.image[$scope.imageCount], $scope.username, $scope.justify, 0);
+            generateImage($scope.tempTweets[$scope.tweetCount], $rootScope.image[$scope.imageCount], $rootScope.username, $scope.justify, 0);
             $scope.imageStatus = ''
             $scope.showImages = true;
             $scope.tweetCount++;
@@ -119,6 +138,8 @@ app.controller('MainCtrl', ['$scope', '$rootScope','$resource','$window','getTwe
             $scope.imageCount ++;
             $scope.showImages = true;
         };
+        $scope.searchIfParams();
+
     }
 ]);
 
