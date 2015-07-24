@@ -22,8 +22,9 @@ angular.module('jadenSmithApp')
         imageList = $resource("http://localhost:8080/api/images?page=" + localStorage.getItem("pageNumber")).get();
         
         return imageList.$promise.then(function (result) {
-            imageList = result.images;
-            return imageList;
+            var images =  Object.keys(result.images).map(function(k){return result.images[k]});
+            console.log("returning " + images.length + " images");
+            return images;
         });    
     }
 }]);

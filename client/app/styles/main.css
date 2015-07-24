@@ -6,6 +6,7 @@
   margin: 0 auto;
   margin-bottom: 20px;
   overflow: hidden;
+  color: white;
 }
 .poster img {
   position: absolute;
@@ -17,15 +18,25 @@
   display: block;
   position: relative;
   margin: 0 auto;
-  width: 400px;
+  width: 550px;
+  height: 600px;
+  position: absolute;
+  top: 60%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 .poster .text p {
-  color: white;
   text-shadow: black 1px 1px 5px;
-  font-size: 72px;
   font-weight: bold;
-  text-align: center;
   word-wrap: break-word;
+}
+.poster .author {
+  text-align: right;
+  font-size: 34px;
+  position: absolute;
+  bottom: 0;
+  width: 600px;
+  padding: 30px;
 }
 .browsehappy {
   margin: 0.2em 0;

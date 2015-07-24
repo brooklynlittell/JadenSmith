@@ -9,7 +9,7 @@
     margin: 0 auto;
     margin-bottom: @margin;
     overflow: hidden;
-    
+    color: white;
     
     img {
         position: absolute;
@@ -22,16 +22,26 @@
         display: block;
         position: relative;
         margin: 0 auto;
-        width: 400px;
-        
+        width: 550px;
+        height: @posterSize;     
+        position: absolute;
+        top: 60%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+              
         p {
-            color: white;
             text-shadow: black 1px 1px 5px;
-            font-size: 72px;
             font-weight: bold;
-            text-align: center;
             word-wrap: break-word;
         }
+    }
+    .author{
+      text-align: right;
+      font-size: 34px;
+      position: absolute;
+      bottom: 0; 
+      width: @posterSize;
+      padding: 30px;
     }
 }
 
