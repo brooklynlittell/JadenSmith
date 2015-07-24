@@ -47,6 +47,9 @@
 body {
   padding: 0;
 }
+div {
+  padding: 4px;
+}
 /* Everything but the jumbotron gets side spacing for mobile first views */
 .header,
 .marketing,

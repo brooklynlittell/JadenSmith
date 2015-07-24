@@ -38,19 +38,18 @@ app.controller('MainCtrl', ['$scope','$rootScope','$resource','$location','$wind
         $scope.justify = "center";
         $scope.tempTweets = [];
         $rootScope.image = [];
-        $scope.imageStatus = '';
+        $scope.isLoading = "ui teal basic button";
         $scope.imageStatusEnd = false;
         $scope.timer;
         $scope.imageList = new Array();
         $scope.tweetPage = 0;
         $scope.tweetsLock = false;
         $scope.imagesLock = false;
-        $scope.textStyle = "{'font-size': 52}";
+        $scope.userNotFound = false;        
        
         $scope.init = function(){
         $scope.imagesLock = true;
         getImages().then(function(data){
-            console.log(data);
             $rootScope.image = $rootScope.image.concat(data);
             console.log("Found images");
             var urlParam = $location.search().username;
@@ -66,11 +65,16 @@ app.controller('MainCtrl', ['$scope','$rootScope','$resource','$location','$wind
             $scope.imageList = [];
             $rootScope.username = $scope.username;
             $location.search('username', $rootScope.username);
-            $scope.imageStatus = 'loading.....'
+            $scope.isLoading = "ui loading button"
             // async stuff (slightly broken for images)
             console.log("Getting tweets");
             $scope.tweetsLock = true;
             getTweets($rootScope.username).then(function(tweets){
+                if(!tweets){
+                    $scope.userNotFound = true;  
+                    return;      
+                }
+                $scope.userNotFound = false;        
                 $scope.tempTweets = tweets;
                 for (var tweet in tweets)
                 {
@@ -116,10 +120,10 @@ app.controller('MainCtrl', ['$scope','$rootScope','$resource','$location','$wind
         };
         $scope.newImage = function(index, tweet){
             console.log(index + " " + tweet);
-            console.log($scope.imageList);
             $scope.timer = new Date();
               // if we need to get more images
-            if ($rootScope.image.length > 0 ) {
+              console.log($rootScope.image.length)
+            if ($rootScope.image.length < 1 ) {
                 if(!$scope.imagesLock){
                     $scope.imagesLock = true;
                     console.log("No more images. Querying for more.");
@@ -163,7 +167,7 @@ app.controller('MainCtrl', ['$scope','$rootScope','$resource','$location','$wind
             $scope.afterImage();
         };
         $scope.afterImage = function(){
-            $scope.imageStatus = '';
+            $scope.isLoading = "ui teal basic button";
             $scope.showImages = true;
             $scope.timer = new Date() - $scope.timer;
             $scope.imagesLock = false

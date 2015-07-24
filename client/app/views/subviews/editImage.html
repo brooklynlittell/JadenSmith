@@ -1,9 +1,18 @@
 {{$index}}
-<button type="button" class="btn btn-primary" ng-click="newImage($index, tweet.tweet)">New Image</button>
-<div class="btn-group" role="group" aria-label="...">
-	<button type="button" class="btn btn-primary" ng-model="CENTER" ng-click="onNewJustify('left', $index)">Left</button>
-	<button type="button" class="btn btn-primary active" ng-model="justifyCenter" ng-click="onNewJustify('center', $index)" >Center</button>
-	<button type="button" class="btn btn-primary" ng-model="justifyRight" ng-click="onNewJustify('right', $index)" >Right</button>
-</div>
+<button class="circular ui icon button" ng-click="newImage($index, tweet.tweet)">
+  <i class="random icon"></i>
+</button><div class="ui buttons">
+	<button class = "ui button"ng-click="onNewJustify('left', $index)">  
+	<i class="align left icon"></i>
+</button>
+	<button class = "ui button"ng-click="onNewJustify('center', $index)">  
+	<i class="align center icon"></i>
+</button>
+	<button class = "ui button"ng-click="onNewJustify('right', $index)"> 
+	 <i class="align right icon"></i>
+</button>
+</div>     
 <!--This button doesn't do anything yet-->
-<button type="button" class="btn btn-primary" ng-model="download" ng-click="onDownload('myCanvas{{$index}}')" >Download</button>
+<button class="circular ui icon button">
+  <i class="download icon"></i>
+</button>

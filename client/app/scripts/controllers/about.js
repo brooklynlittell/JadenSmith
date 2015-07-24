@@ -8,6 +8,8 @@
  * Controller of the jadenSmithApp
  */
 angular.module('jadenSmithApp')
-.controller('GreetingController', ['$scope', function($scope) {
-    $scope.greeting = 'Hola!';
+.controller('AboutCtrl', ['$scope', function($scope) {
+    var path = '../../images/'
+    $scope.brandon = path + 'brandon.png';
+    $scope.jen = path + 'jen.jpg';
 }]);

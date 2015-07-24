@@ -32,7 +32,15 @@
     var totalQueries = 0;
     // routes ======================================================================
     // api ---------------------------------------------------------------------
-    // get all todos
+
+    // for debugging/monitoring purposes
+    app.get('/api/data/tweets', function(req, res){
+    res.json(tweetsCache.keys());
+    }) 
+    app.get('/api/data/images', function(req, res){
+    res.json(imagesCache.keys());
+    }) 
+
     app.get('/api/images/:page?', function(req, res) {
         totalQueries++;
         var _page = req.query.page;
@@ -48,9 +56,9 @@
         var imageUrls = {};
         ig.use({client_id: config.instagramkey, client_secret: config.instagramsecret});
         // playing around with mixing up the tags for variety
-        var queries = ['pro_shooters', 'natureonly', 'insta_pick']
+        var queries = ['pro_shooters', 'natureonly', 'insta_pick', 'leafpeeping', 'chasingfog', 'soloparking','puddlegram', 'fromwhereIstand']
         var rand = queries[Math.floor(Math.random() * queries.length)];
-        console.log("searching for photos");
+        console.log("searching for photos on " + rand);
         ig.tag_media_recent(rand, function(err, medias, pagination, remaining, limit) {
              if(err) { 
                 throw new Error(err); 
