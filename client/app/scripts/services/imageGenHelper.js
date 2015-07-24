@@ -35,9 +35,10 @@ angular.module('jadenSmithApp')
     };
 }])
 .service('getInverseColor', ['invertColor', 'getHex', function(invertColor, getHex){
-    return function(canvas) {
+    return function(image) {
         var colorThief = new ColorThief();
-        var color = getHex(colorThief.getColor(canvas));
-        return invertColor(color);
+        var color = getHex(colorThief.getColor(image));
+        console.log(color);
+        return invertColor(color);            
     };
 }]);
