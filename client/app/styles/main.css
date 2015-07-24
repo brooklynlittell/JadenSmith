@@ -6,6 +6,7 @@
   margin: 0 auto;
   margin-bottom: 20px;
   overflow: hidden;
+  color: white;
 }
 .poster img {
   position: absolute;
@@ -20,22 +21,22 @@
   width: 550px;
   height: 600px;
   position: absolute;
-  top: 50%;
+  top: 60%;
   left: 50%;
   transform: translate(-50%, -50%);
-  color: white;
 }
 .poster .text p {
   text-shadow: black 1px 1px 5px;
   font-weight: bold;
   word-wrap: break-word;
 }
-.poster .text .author {
+.poster .author {
   text-align: right;
   font-size: 34px;
   position: absolute;
-  bottom: 40px;
-  width: 100%;
+  bottom: 0;
+  width: 600px;
+  padding: 30px;
 }
 .browsehappy {
   margin: 0.2em 0;
