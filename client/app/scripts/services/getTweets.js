@@ -10,11 +10,10 @@ angular.module('jadenSmithApp')
 		return $resource("http://localhost:8080/api/tweets/" + user + "/" + pageCount).get()
 		.$promise.then(function(data) {
 			console.log("Fetching tweets for " + user);
-			pageCount++;
 			var tweets = Object.keys(data.tweets).map(function (key){
 				return data.tweets[key];
 			});
-
+			if (tweets.length > 0 ) pageCount++;
 			console.log("Found " + tweets.length + " tweets ");
 			return tweets;
 		}, function(error){

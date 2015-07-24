@@ -84,6 +84,7 @@ app.controller('MainCtrl', ['$scope','$rootScope','$resource','$location','$wind
                 }
                 for (var tweet in tweets)
                 {
+                    console.log(tweets[tweet])
                     $scope.timer = new Date();
                     $scope.getImage(tweets[tweet]);
                 }
