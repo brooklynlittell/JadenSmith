@@ -35,7 +35,7 @@ app.controller('MainCtrl', ['$scope','$rootScope','$resource','$location','$wind
         // temp until tweets gets fixed
         $scope.tweets = ["Yeah Your Girl Is Bad But She Doesn't Smile.", "That Moment When Peeing Feels So Good You Start Crying."];
         $scope.showImages = false;
-        $scope.justify = "CENTER";
+        $scope.justify = "center";
         $scope.tweetCount = 0;
         $scope.tempTweets = [];
         $scope.imageCount = 0;
@@ -46,6 +46,7 @@ app.controller('MainCtrl', ['$scope','$rootScope','$resource','$location','$wind
         $scope.tweetPage = 0;
         $scope.tweetsLock = false;
         $scope.imagesLock = false;
+        $scope.textStyle = "{'font-size': 52}";
        
         $scope.init = function(){
         $scope.imagesLock = true;
@@ -71,13 +72,12 @@ app.controller('MainCtrl', ['$scope','$rootScope','$resource','$location','$wind
             $scope.tweetCount = 0;
             console.log("Getting tweets");
             $scope.tweetsLock = true;
-            getTweets($rootScope.username, $scope.tweetPage).then(function(tweets){
-                $scope.tweetPage++;
+            getTweets($rootScope.username).then(function(tweets){
                 $scope.tempTweets = tweets;
                 for (var tweet in tweets)
                 {
                     $scope.timer = new Date();
-                    $scope.getImage(tweets[tweet]);
+                    $scope.getImage(tweets[tweet], tweet);
                 }
                 $scope.tweetsLock = false;
             });
@@ -93,11 +93,10 @@ app.controller('MainCtrl', ['$scope','$rootScope','$resource','$location','$wind
         $scope.moreTweetsLock = function() {
             // async stuff (slightly broken for images)
             $scope.tweetsLock = true;
-            getTweets($rootScope.username, $scope.tweetPage).then(function(tweets){
-                $scope.tweetPage++;
+            console.log("HERE")
+            getTweets($rootScope.username).then(function(tweets){
                 $scope.tempTweets = $scope.tempTweets.concat(tweets);
                 if (tweets.length === 0){
-                    $scope.tweetPage--;
                     $scope.imageStatusEnd = true;
                 }
                 for (var tweet in tweets)
@@ -109,34 +108,35 @@ app.controller('MainCtrl', ['$scope','$rootScope','$resource','$location','$wind
             });
         };
 
-        $scope.onNewJustify = function(justify, tweet){
-            console.log("Generating new justification " + justify + " for " + tweet);
+        $scope.onNewJustify = function(justify, index){
+            console.log("Generating new justification " + justify +  "at index " + index);
             $scope.justify = justify;
-            generateImage(tweet, $rootScope.image[$scope.imageCount], $rootScope.username, $scope.justify, 0);
+            $scope.imageList[index] = (generateImage($scope.imageList[index].tweet,  $scope.imageList[index].image, $scope.username, $scope.justify, 0));
         };
         
         $scope.onDownload = function(id) {
             var dataURL = document.getElementById(id).toDataURL('image/png');
             $window.open(dataURL, '_blank');
         };
-        $scope.newImage = function(index){
+        $scope.newImage = function(index, tweet){
+            console.log(index + " " + tweet + $scope.tempTweets);
             $scope.timer = new Date();
               // if we need to get more images
             if ($scope.imageCount >= Object.keys($rootScope.image).length - 1 ) {
                 if(!$scope.imagesLock){
-                    scope.imagesLock = true;
+                    $scope.imagesLock = true;
                     console.log("No more images. Querying for more.");
                     getImages().then(function(data) {
                         $rootScope.image = data;
                         $scope.imageCount = 0;
-                        $scope.imageList[index] = (generateImage($scope.tempTweets[index], $rootScope.image[$scope.imageCount], $scope.username, $scope.justify, 0));
+                        $scope.imageList[index] = (generateImage($scope.imageList[index].tweet,  $rootScope.image[$scope.imageCount], $scope.username, $scope.justify, 0));
                         $scope.afterImage(); 
                     });
                 }
   
             }
             else {
-                $scope.imageList[index] = (generateImage($scope.tempTweets[index], $rootScope.image[$scope.imageCount], $scope.username, $scope.justify, 0));
+                $scope.imageList[index] = (generateImage($scope.imageList[index].tweet,  $rootScope.image[$scope.imageCount], $scope.username, $scope.justify, 0));
                 $scope.afterImage();
             }            
         }
@@ -164,17 +164,18 @@ app.controller('MainCtrl', ['$scope','$rootScope','$resource','$location','$wind
         // actually calling the image generation class
         $scope.drawImage = function(tweet){
             // generateImage($scope.tempTweets[$scope.tweetCount], $rootScope.image[$scope.imageCount], $rootScope.username, $scope.justify, 0);     
-            console.log("drawImage");
-            $scope.imageList.push(generateImage(tweet, $rootScope.image[$scope.imageCount], $scope.username, $scope.justify, 0));
+            console.log("drawImage ");
+            $scope.imageList[$scope.tweetCount] = (generateImage(tweet, $rootScope.image[$scope.imageCount], $scope.username, $scope.justify, 0));
             $scope.afterImage();
         };
         $scope.afterImage = function(){
+            $scope.tweetCount++;
             $scope.imageCount++;
             $scope.imageStatus = '';
             $scope.showImages = true;
             $scope.timer = new Date() - $scope.timer;
             $scope.imagesLock = false
-           // console.log("Request handeled in " + $scope.timer + " milliseconds");   
+            console.log("Request handeled in " + $scope.timer + " milliseconds");   
         };
     }
 ]);

@@ -1,7 +1,10 @@
 <div class="poster">
     <img src="{{tweet.image}}" />
     <div class="text">
-        <p>{{tweet.tweet}}</p>
-    </div>
+        <p ng-style= "{{imageList[$index].css}}">{{tweet.tweet}}</p>
+    	<div class="author">
+    		@{{tweet.author}}
+		</div>
+	</div>
 </div>
-    <div editimage></div>
+<div editimage></div>
