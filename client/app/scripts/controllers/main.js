@@ -43,8 +43,12 @@ app.controller('MainCtrl', ['$scope','$rootScope','$resource','$location','$wind
         $scope.imageStatusEnd = false;
         $scope.timer;
         $scope.imageList = new Array();
+        $scope.tweetPage = 0;
+        $scope.tweetsLock = false;
+        $scope.imagesLock = false;
        
         $scope.init = function(){
+        $scope.imagesLock = true;
         getImages().then(function(data){
             $rootScope.image = data;
             console.log("Found images");
@@ -54,6 +58,7 @@ app.controller('MainCtrl', ['$scope','$rootScope','$resource','$location','$wind
                 $scope.onSearch();
                 }  
             });
+        $scope.imagesLock = false;
         }
         $scope.onSearch = function() {
             $scope.tweetCount  = 0;
@@ -65,30 +70,42 @@ app.controller('MainCtrl', ['$scope','$rootScope','$resource','$location','$wind
             // async stuff (slightly broken for images)
             $scope.tweetCount = 0;
             console.log("Getting tweets");
-            getTweets($rootScope.username).then(function(tweets){
+            $scope.tweetsLock = true;
+            getTweets($rootScope.username, $scope.tweetPage).then(function(tweets){
+                $scope.tweetPage++;
                 $scope.tempTweets = tweets;
                 for (var tweet in tweets)
                 {
                     $scope.timer = new Date();
                     $scope.getImage(tweets[tweet]);
                 }
-                //$scope.newImage();
+                $scope.tweetsLock = false;
             });
         };
-        $scope.moreTweets = function() {
+        $scope.moreTweets = function(){
+            if (!$scope.tweetsLock){
+                $scope.moreTweetsLock();
+            }
+            else{
+                console.log("Next page locked");
+            }
+        }
+        $scope.moreTweetsLock = function() {
             // async stuff (slightly broken for images)
-            getTweets($rootScope.username).then(function(tweets){
+            $scope.tweetsLock = true;
+            getTweets($rootScope.username, $scope.tweetPage).then(function(tweets){
+                $scope.tweetPage++;
                 $scope.tempTweets = $scope.tempTweets.concat(tweets);
                 if (tweets.length === 0){
+                    $scope.tweetPage--;
                     $scope.imageStatusEnd = true;
                 }
                 for (var tweet in tweets)
                 {
-                    console.log(tweets[tweet])
                     $scope.timer = new Date();
                     $scope.getImage(tweets[tweet]);
                 }
-                //$scope.newImage();
+                $scope.tweetsLock = false;
             });
         };
 
@@ -106,13 +123,17 @@ app.controller('MainCtrl', ['$scope','$rootScope','$resource','$location','$wind
             $scope.timer = new Date();
               // if we need to get more images
             if ($scope.imageCount >= Object.keys($rootScope.image).length - 1 ) {
-                console.log("No more images. Querying for more.");
-                getImages().then(function(data) {
-                    $rootScope.image = data;
-                    $scope.imageCount = 0;
-                    $scope.imageList[index] = (generateImage($scope.tempTweets[index], $rootScope.image[$scope.imageCount], $scope.username, $scope.justify, 0));
-                    $scope.afterImage(); 
-                });
+                if(!$scope.imagesLock){
+                    scope.imagesLock = true;
+                    console.log("No more images. Querying for more.");
+                    getImages().then(function(data) {
+                        $rootScope.image = data;
+                        $scope.imageCount = 0;
+                        $scope.imageList[index] = (generateImage($scope.tempTweets[index], $rootScope.image[$scope.imageCount], $scope.username, $scope.justify, 0));
+                        $scope.afterImage(); 
+                    });
+                }
+  
             }
             else {
                 $scope.imageList[index] = (generateImage($scope.tempTweets[index], $rootScope.image[$scope.imageCount], $scope.username, $scope.justify, 0));
@@ -122,14 +143,18 @@ app.controller('MainCtrl', ['$scope','$rootScope','$resource','$location','$wind
         // pulls the next image, or queries for more images, if necessary
         $scope.getImage = function(tweet) {         
             // if we need to get more images
-            if ($scope.imageCount >= Object.keys($rootScope.image).length - 1 ) {
-                console.log("No more images. Querying for more.");
-                getImages().then(function(data) {
-                    $rootScope.image = data;
-                    console.log("Found images");
-                    $scope.imageCount = 0;
-                    $scope.drawImage(tweet);
-                });
+            if ($scope.imageCount >= Object.keys($rootScope.image).length - 1) {
+                if(!$scope.imagesLock){
+                    $scope.imagesLock = true;
+                    console.log("No more images. Querying for more.");
+                    getImages().then(function(data) {
+                        $rootScope.image = data;
+                        console.log("Found images");
+                        $scope.imageCount = 0;
+                        $scope.drawImage(tweet);
+                    });                    
+                }
+
             }
             else {
                 $scope.imageCount++;
@@ -148,7 +173,8 @@ app.controller('MainCtrl', ['$scope','$rootScope','$resource','$location','$wind
             $scope.imageStatus = '';
             $scope.showImages = true;
             $scope.timer = new Date() - $scope.timer;
-            console.log("Request handeled in " + $scope.timer + " milliseconds");   
+            $scope.imagesLock = false
+           // console.log("Request handeled in " + $scope.timer + " milliseconds");   
         };
     }
 ]);

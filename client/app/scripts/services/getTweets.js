@@ -1,9 +1,8 @@
 'use strict';
-var pageCount = 0;
 var lastUser = "";
 angular.module('jadenSmithApp')
 .factory('getTweets', ['$resource', function($resource) {
-	return function(user) {
+	return function(user, pageCount) {
 		if(user != lastUser) pageCount = 0;
 		lastUser = user;
 		console.log("querying at " + "http://localhost:8080/api/tweets/" + user + "/" + pageCount);
