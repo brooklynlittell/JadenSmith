@@ -131,12 +131,13 @@ function checkTweetCache(_id, _page, res){
         var count = 0;
         for(tweet in data){
             // ignore tweets with a URL in it
-            if(data[tweet].text.indexOf("http") == -1){
+            kLINK_DETECTION_REGEX = /(([a-z]+:\/\/)?(([a-z0-9\-]+\.)+([a-z]{2}|aero|arpa|biz|com|coop|edu|gov|info|int|jobs|mil|museum|name|nato|net|org|pro|travel|local|internal))(:[0-9]{1,5})?(\/[a-z0-9_\-\.~]+)*(\/([a-z0-9_\-\.]*)(\?[a-z0-9+_\-\.%=&amp;]*)?)?(#[a-zA-Z0-9!$&'()*+.=-_~:@/?]*)?)(\s+|$)/gi;
+            data[tweet].text = data[tweet].text.replace(kLINK_DETECTION_REGEX, '');
                 // map text -> count (weight can be used later to pull good tweets)
-                tweets[tweet] = data[tweet].text;
-                count++;
-                if(count >= 4) break;
-            } 
+            console.log(data[tweet].text);
+            tweets[tweet] = data[tweet].text;
+            count++;
+            if(count >= 4) break;
         }
         console.log("R1 " + JSON.stringify(tweets))
         response.tweets = tweets;

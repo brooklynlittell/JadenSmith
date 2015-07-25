@@ -110,7 +110,8 @@ app.controller('MainCtrl', ['$scope','$rootScope','$route', '$resource','$locati
                 html2canvas(poster, {
                 proxy: 'http://localhost:8080/',
                 onrendered: function(canvas) {
-                    $window.open(canvas.toDataURL('image/png'));                      
+                    $window.open(canvas.toDataURL('image/png'));   
+                    console.log(canvas.toDataURL('image/png'));                   
                     }
                 });
             });
