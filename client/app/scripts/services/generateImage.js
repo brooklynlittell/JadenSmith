@@ -15,7 +15,6 @@ angular.module('jadenSmithApp')
     }
     return function(tweetText, imageSrc, authorText, justify) {
         var fontSize = getFontSize(tweetText);
-        console.log(tweetText + " " + tweetText.length);
         var imageObj = {};
         imageObj.css = genCSS(fontSize, justify);
         imageObj.tweet = tweetText;

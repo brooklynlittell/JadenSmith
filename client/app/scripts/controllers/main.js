@@ -123,7 +123,7 @@ app.controller('MainCtrl', ['$scope','$rootScope','$route', '$resource','$locati
                     $scope.imagesLock = true;
                     console.log("No more images. Querying for more.");
                     getImages().then(function(data) {
-                        $rootScope.image.concat(data);
+                        $rootScope.image = $rootScope.image.concat(data);
                         $scope.imageList[index] = (generateImage($scope.imageList[index].tweet,  $rootScope.image.pop(), $scope.username, $scope.justify));
                         $scope.afterImage(); 
                     });
@@ -142,8 +142,7 @@ app.controller('MainCtrl', ['$scope','$rootScope','$route', '$resource','$locati
                     $scope.imagesLock = true;
                     console.log("No more images. Querying for more.");
                     getImages().then(function(data) {
-                        console.log("Found images");
-                        $rootScope.image.concat(data);
+                        $rootScope.image = $rootScope.image.concat(data);
                         $scope.imageCount = 0;
                         $scope.drawImage(tweet);
                     });                    
