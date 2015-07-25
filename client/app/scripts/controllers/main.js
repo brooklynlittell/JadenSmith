@@ -62,6 +62,9 @@ app.controller('MainCtrl', ['$scope','$rootScope','$resource','$location','$wind
                     console.log("Request handeled in " + $scope.timer + " milliseconds");   
                     return;      
                 }
+                if(tweets.length == 0){
+                    console.log("Url error");
+                }
                 $scope.userNotFound = false;        
                 $scope.tweets = tweets;
                 for (var tweet in tweets)
