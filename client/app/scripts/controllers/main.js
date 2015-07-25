@@ -105,31 +105,12 @@ app.controller('MainCtrl', ['$scope','$rootScope','$route', '$resource','$locati
         };
         
         $scope.onDownload = function(index) {
-            var poster = document.getElementById("poster" + index);
-            console.log(poster);
+            var poster = document.getElementById("poster" + index)
             angular.element(document).ready(function (){
                 html2canvas(poster, {
+                proxy: 'http://localhost:8080/',
                 onrendered: function(canvas) {
-                    $window.open(canvas.toDataURL('image/png'));
-                    }
-                });
-            });
-        };
-        $scope.onDownloadTest = function(id) {
-            var poster = document.getElementById(id)
-            angular.element(document).ready(function (){
-                html2canvas(poster, {
-                onrendered: function(canvas) {
-                    console.log("here");
-                    var context = canvas.getContext("2d");
-                    var imageObj = new Image();
-                    imageObj.crossOrigin = "anonymous";
-                    imageObj.src = "https://scontent-arn2-1.xx.fbcdn.net/hphotos-xtf1/v/t1.0-9/11064795_10152950656609779_111824480290480818_n.jpg?oh=a50b4aeb3f1dfb40758b9fc643a5a882&oe=5613F744"; 
-                    imageObj.onload = function(){
-                        console.log("Here")
-                      //  context.drawImage(imageObj, 0, 0);
-                        $window.open(canvas.toDataURL('image/png'));
-                        }
+                    $window.open(canvas.toDataURL('image/png'));                      
                     }
                 });
             });
