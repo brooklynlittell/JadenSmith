@@ -1,0 +1,32 @@
+.posterAbout {
+  display: inline-block;
+  position: relative;
+  width: 400px;
+  height: 400px;
+  margin: 20px;
+  overflow: hidden;
+  color: white;
+}
+.posterAbout img {
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  left: 0;
+}
+.posterAbout .text {
+  display: block;
+  position: relative;
+  margin: 0 auto;
+  width: 550px;
+  height: 400px;
+  position: absolute;
+  top: 60%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.posterAbout .text p {
+  text-shadow: black 1px 1px 5px;
+  font-weight: bold;
+  word-wrap: break-word;
+  font-size: 50px;
+}
