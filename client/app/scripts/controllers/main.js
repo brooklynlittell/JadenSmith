@@ -13,7 +13,7 @@ var app = angular.module('jadenSmithApp');
 
 app.controller('MainCtrl', ['$scope','$rootScope','$resource','$location','$window','getTweets','getImages','generateImage', 
     function ($scope, $rootScope, $resource, $location, $window, getTweets, getImages, generateImage) {
-        $scope.username = 'officialjaden';
+        $scope.username = '';
         $scope.justify = "center";
         $scope.isLoading = "ui teal basic button";
 
@@ -56,6 +56,9 @@ app.controller('MainCtrl', ['$scope','$rootScope','$resource','$location','$wind
                     $scope.userNotFound = true;
                     $scope.isLoading = "ui teal basic button";
                     $scope.timer = new Date() - $scope.timer;
+                    $scope.errorMessage = "Twitter account " + $scope.username + " not found";
+                    $scope.errorImage = $rootScope.image.pop();
+                    $scope.tweets = "";
                     console.log("Request handeled in " + $scope.timer + " milliseconds");   
                     return;      
                 }
@@ -159,5 +162,10 @@ app.directive('image', function() {
 app.directive('editimage', function() {
     return {
         templateUrl: app.subviewPath + 'editImage.html'
+    };
+});
+app.directive('errorMessage', function() {
+    return {
+        templateUrl: app.subviewPath + 'errorImage.html'
     };
 });

@@ -4,10 +4,7 @@
 	<button class="{{isLoading}}" ng-click="onSearch(username)" ng-model="searchButton">Search</button>
 </div>
 
-<div class="ui negative message" ng-show = "userNotFound">
-  <i class="close icon"></i>
-  <div class="header">
-    User not found
-  </div>
-</p></div>
+<div class="errorMessage" ng-show = "userNotFound">
+	<div error-message> </div>
+</div>
 <div images></div>
