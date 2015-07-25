@@ -13,7 +13,7 @@ var app = angular.module('jadenSmithApp');
 
 app.controller('MainCtrl', ['$scope','$rootScope','$route', '$resource','$location','$window','getTweets','getImages','generateImage', 
     function ($scope, $rootScope, $route, $resource, $location, $window, getTweets, getImages, generateImage) {
-        $scope.username = '';
+        $scope.username = 'officialjaden';
         $scope.justify = "center";
         $scope.align = "middle"
         $scope.isLoading = "ui teal basic button";
@@ -63,7 +63,8 @@ app.controller('MainCtrl', ['$scope','$rootScope','$route', '$resource','$locati
             $scope.timer = new Date();
             $scope.tweetsLock = true;
             getTweets($scope.username).then(function(tweets){
-                if(!tweets){
+                console.log(tweets);
+                if(!tweets || tweets.length === 0){
                     $scope.userNotFound = true;
                     $scope.isLoading = "ui teal basic button";
                     $scope.timer = new Date() - $scope.timer;
@@ -72,9 +73,6 @@ app.controller('MainCtrl', ['$scope','$rootScope','$route', '$resource','$locati
                     $scope.tweets = "";
                     console.log("Request handeled in " + $scope.timer + " milliseconds");   
                     return;      
-                }
-                if(tweets.length == 0){
-                    console.log("Url error");
                 }
                 $scope.userNotFound = false;        
                 $scope.tweets = tweets;
@@ -158,7 +156,7 @@ app.controller('MainCtrl', ['$scope','$rootScope','$route', '$resource','$locati
         };
         // actually calling the image generation class
         $scope.drawImage = function(tweet){
-            $scope.imageList.push(generateImage(tweet, $rootScope.image.pop(), $scope.username, $scope.justify));
+            $scope.imageList.push(generateImage(tweet, $rootScope.image.pop(), $scope.username, $scope.justify, $scope.align));
             $scope.afterImage();
         };
         $scope.afterImage = function(){
