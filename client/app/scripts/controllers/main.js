@@ -165,7 +165,7 @@ app.controller('MainCtrl', ['$scope','$rootScope','$route', '$resource','$locati
         };
         var lastRoute = $route.current;
         $scope.$on('$locationChangeSuccess', function(event) {
-            $route.current = lastRoute;
+           // $route.current = lastRoute;
         });
     }
 ]);
