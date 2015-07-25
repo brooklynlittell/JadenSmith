@@ -105,12 +105,22 @@ app.controller('MainCtrl', ['$scope','$rootScope','$route', '$resource','$locati
         };
         
         $scope.onDownload = function(index) {
-            var poster = document.getElementById("poster" + index)
+            var poster = document.getElementById("poster" + index);
+            console.log(poster);
             angular.element(document).ready(function (){
                 html2canvas(poster, {
                 onrendered: function(canvas) {
-                document.body.appendChild(canvas);
-                $window.open(canvas.toDataURL('image/png'));
+                    $window.open(canvas.toDataURL('image/png'));
+                    }
+                });
+            });
+        };
+        $scope.onDownloadTest = function(id) {
+            var poster = document.getElementById(id)
+            angular.element(document).ready(function (){
+                html2canvas(poster, {
+                onrendered: function(canvas) {
+                    $window.open(canvas.toDataURL('image/png'));
                     }
                 });
             });
