@@ -10,13 +10,13 @@ angular.module('jadenSmithApp')
         else 120 - tweetText.length;
     }
 
-    function genCSS(fontSize, justify){
-        return "{'font-size': " + fontSize + ",'text-align': '" + justify + "'}"
+    function genCSS(fontSize, justify, align){
+        return "{'font-size': " + fontSize + ",'text-align': '" + justify + "','vertical-align': '" + align + "'}";
     }
-    return function(tweetText, imageSrc, authorText, justify) {
+    return function(tweetText, imageSrc, authorText, justify, align) {
         var fontSize = getFontSize(tweetText);
         var imageObj = {};
-        imageObj.css = genCSS(fontSize, justify);
+        imageObj.css = genCSS(fontSize, justify, align);
         imageObj.tweet = tweetText;
         imageObj.image = imageSrc;
         imageObj.author = authorText;

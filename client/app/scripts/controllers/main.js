@@ -15,6 +15,7 @@ app.controller('MainCtrl', ['$scope','$rootScope','$route', '$resource','$locati
     function ($scope, $rootScope, $route, $resource, $location, $window, getTweets, getImages, generateImage) {
         $scope.username = '';
         $scope.justify = "center";
+        $scope.align = "middle"
         $scope.isLoading = "ui teal basic button";
 
         $scope.tweets = [];
@@ -101,9 +102,11 @@ app.controller('MainCtrl', ['$scope','$rootScope','$route', '$resource','$locati
         };
 
         $scope.onNewJustify = function(justify, index){
-            $scope.imageList[index] = (generateImage($scope.imageList[index].tweet,  $scope.imageList[index].image, $scope.username, justify));
+            $scope.imageList[index] = (generateImage($scope.imageList[index].tweet,  $scope.imageList[index].image, $scope.username, justify, $scope.align));
         };
-        
+        $scope.onNewAlign = function(align, index){
+            $scope.imageList[index] = (generateImage($scope.imageList[index].tweet,  $scope.imageList[index].image, $scope.username, $scope.justify, align));
+        }
         $scope.onDownload = function(index) {
             var poster = document.getElementById("poster" + index)
             angular.element(document).ready(function (){
@@ -125,13 +128,13 @@ app.controller('MainCtrl', ['$scope','$rootScope','$route', '$resource','$locati
                     console.log("No more images. Querying for more.");
                     getImages().then(function(data) {
                         $rootScope.image = $rootScope.image.concat(data);
-                        $scope.imageList[index] = (generateImage($scope.imageList[index].tweet,  $rootScope.image.pop(), $scope.username, $scope.justify));
+                        $scope.imageList[index] = (generateImage($scope.imageList[index].tweet,  $rootScope.image.pop(), $scope.username, $scope.justify, $scope.align));
                         $scope.afterImage(); 
                     });
                 }
             }
             else {
-                $scope.imageList[index] = (generateImage($scope.imageList[index].tweet,  $rootScope.image.pop(), $scope.username, $scope.justify));
+                $scope.imageList[index] = (generateImage($scope.imageList[index].tweet,  $rootScope.image.pop(), $scope.username, $scope.justify, $scope.align));
                 $scope.afterImage();
             }            
         }
