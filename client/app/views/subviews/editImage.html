@@ -1,7 +1,7 @@
-{{$index}}
 <button class="circular ui icon button" ng-click="newImage($index, tweet.tweet)">
   <i class="random icon"></i>
-</button><div class="ui buttons">
+</button>
+<div class="ui buttons">
 	<button class = "ui button"ng-click="onNewJustify('left', $index)">  
 	<i class="align left icon"></i>
 </button>
@@ -11,6 +11,15 @@
 	<button class = "ui button"ng-click="onNewJustify('right', $index)"> 
 	 <i class="align right icon"></i>
 </button>
+</div>
+
+<div class="ui buttons">
+	<button class = "ui button"ng-click="onNewAlign('text-top', $index)">  
+		<i class="angle up icon"></i>
+	</button>
+	<button class = "ui button"ng-click="onNewAlign('middle', $index)">  
+		<i class="angle down icon"></i>
+	</button>
 </div>     
 <!--This button doesn't do anything yet-->
 <button class="circular ui icon button" ng-click="onDownload($index)">

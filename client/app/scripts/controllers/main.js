@@ -13,8 +13,9 @@ var app = angular.module('jadenSmithApp');
 
 app.controller('MainCtrl', ['$scope','$rootScope','$route', '$resource','$location','$window','getTweets','getImages','generateImage', 
     function ($scope, $rootScope, $route, $resource, $location, $window, getTweets, getImages, generateImage) {
-        $scope.username = '';
+        $scope.username = 'officialjaden';
         $scope.justify = "center";
+        $scope.align = "middle"
         $scope.isLoading = "ui teal basic button";
 
         $scope.tweets = [];
@@ -62,7 +63,8 @@ app.controller('MainCtrl', ['$scope','$rootScope','$route', '$resource','$locati
             $scope.timer = new Date();
             $scope.tweetsLock = true;
             getTweets($scope.username).then(function(tweets){
-                if(!tweets){
+                console.log(tweets);
+                if(!tweets || tweets.length === 0){
                     $scope.userNotFound = true;
                     $scope.isLoading = "ui teal basic button";
                     $scope.timer = new Date() - $scope.timer;
@@ -71,9 +73,6 @@ app.controller('MainCtrl', ['$scope','$rootScope','$route', '$resource','$locati
                     $scope.tweets = "";
                     console.log("Request handeled in " + $scope.timer + " milliseconds");   
                     return;      
-                }
-                if(tweets.length == 0){
-                    console.log("Url error");
                 }
                 $scope.userNotFound = false;        
                 $scope.tweets = tweets;
@@ -101,16 +100,19 @@ app.controller('MainCtrl', ['$scope','$rootScope','$route', '$resource','$locati
         };
 
         $scope.onNewJustify = function(justify, index){
-            $scope.imageList[index] = (generateImage($scope.imageList[index].tweet,  $scope.imageList[index].image, $scope.username, justify));
+            $scope.imageList[index] = (generateImage($scope.imageList[index].tweet,  $scope.imageList[index].image, $scope.username, justify, $scope.align));
         };
-        
+        $scope.onNewAlign = function(align, index){
+            $scope.imageList[index] = (generateImage($scope.imageList[index].tweet,  $scope.imageList[index].image, $scope.username, $scope.justify, align));
+        }
         $scope.onDownload = function(index) {
             var poster = document.getElementById("poster" + index)
             angular.element(document).ready(function (){
                 html2canvas(poster, {
                 proxy: 'http://localhost:8080/',
                 onrendered: function(canvas) {
-                    $window.open(canvas.toDataURL('image/png'));                      
+                    $window.open(canvas.toDataURL('image/png'));   
+                    console.log(canvas.toDataURL('image/png'));                   
                     }
                 });
             });
@@ -124,13 +126,13 @@ app.controller('MainCtrl', ['$scope','$rootScope','$route', '$resource','$locati
                     console.log("No more images. Querying for more.");
                     getImages().then(function(data) {
                         $rootScope.image = $rootScope.image.concat(data);
-                        $scope.imageList[index] = (generateImage($scope.imageList[index].tweet,  $rootScope.image.pop(), $scope.username, $scope.justify));
+                        $scope.imageList[index] = (generateImage($scope.imageList[index].tweet,  $rootScope.image.pop(), $scope.username, $scope.justify, $scope.align));
                         $scope.afterImage(); 
                     });
                 }
             }
             else {
-                $scope.imageList[index] = (generateImage($scope.imageList[index].tweet,  $rootScope.image.pop(), $scope.username, $scope.justify));
+                $scope.imageList[index] = (generateImage($scope.imageList[index].tweet,  $rootScope.image.pop(), $scope.username, $scope.justify, $scope.align));
                 $scope.afterImage();
             }            
         }
@@ -154,7 +156,7 @@ app.controller('MainCtrl', ['$scope','$rootScope','$route', '$resource','$locati
         };
         // actually calling the image generation class
         $scope.drawImage = function(tweet){
-            $scope.imageList.push(generateImage(tweet, $rootScope.image.pop(), $scope.username, $scope.justify));
+            $scope.imageList.push(generateImage(tweet, $rootScope.image.pop(), $scope.username, $scope.justify, $scope.align));
             $scope.afterImage();
         };
         $scope.afterImage = function(){

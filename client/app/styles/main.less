@@ -20,13 +20,17 @@
     
     .text {
         width: @posterSize;
+        height: @posterSize - 50px;
         position: absolute;
         padding: @margin;
+        display: table; 
+
               
         p {
             text-shadow: black 1px 1px 5px;
             font-weight: bold;
             word-wrap: break-word;
+            display: table-cell; 
         }
     }
     .author{

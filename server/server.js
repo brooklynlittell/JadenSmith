@@ -16,10 +16,11 @@
 
     // cache tweets for 30 minutes, check cache every .6 seconds
     var tweetsCache = new NodeCache( { stdTTL: 1800000, checkperiod: 600 } );
-    // cache images for 15 minutes, check cache ever .6 seconds
-    var imagesCache = new NodeCache( { stdTTL: 900000, checkperiod: 600 } );
+    // cache images for 7 minutes, check cache ever .6 seconds #420 blaze it
+    var imagesCache = new NodeCache( { stdTTL: 420000, checkperiod: 600 } );
 
-
+    var queries = ['pro_shooters', 'natureonly', 'insta_pick', 'leafpeeping', 'chasingfog', 'soloparking','puddlegram', 'fromwhereIstand']
+    var queryList = [];
     // configuration =================
     app.use(morgan('dev'));                                         // log every request to the console
     app.use(bodyParser.json());                                     // parse application/json
@@ -57,10 +58,14 @@
         var imageUrls = {};
         ig.use({client_id: config.instagramkey, client_secret: config.instagramsecret});
         // playing around with mixing up the tags for variety
-        var queries = ['pro_shooters', 'natureonly', 'insta_pick', 'leafpeeping', 'chasingfog', 'soloparking','puddlegram', 'fromwhereIstand']
-        var rand = queries[Math.floor(Math.random() * queries.length)];
-        console.log("searching for photos on " + rand);
-        ig.tag_media_recent(rand, function(err, medias, pagination, remaining, limit) {
+        if(!queryList || queryList.length === 0){
+            queryList = queries.slice();
+            queryList = shuffle(queryList);
+
+        }
+        var query = queryList.pop();
+        console.log("searching for photos on " + query);
+        ig.tag_media_recent(query, function(err, medias, pagination, remaining, limit) {
              if(err) { 
                 throw new Error(err); 
             }
@@ -131,14 +136,13 @@ function checkTweetCache(_id, _page, res){
         var count = 0;
         for(tweet in data){
             // ignore tweets with a URL in it
-            if(data[tweet].text.indexOf("http") == -1){
+            kLINK_DETECTION_REGEX = /(([a-z]+:\/\/)?(([a-z0-9\-]+\.)+([a-z]{2}|aero|arpa|biz|com|coop|edu|gov|info|int|jobs|mil|museum|name|nato|net|org|pro|travel|local|internal))(:[0-9]{1,5})?(\/[a-z0-9_\-\.~]+)*(\/([a-z0-9_\-\.]*)(\?[a-z0-9+_\-\.%=&amp;]*)?)?(#[a-zA-Z0-9!$&'()*+.=-_~:@/?]*)?)(\s+|$)/gi;
+            data[tweet].text = data[tweet].text.replace(kLINK_DETECTION_REGEX, '');
                 // map text -> count (weight can be used later to pull good tweets)
-                tweets[tweet] = data[tweet].text;
-                count++;
-                if(count >= 4) break;
-            } 
+            tweets[tweet] = data[tweet].text;
+            count++;
+            if(count >= 4) break;
         }
-        console.log("R1 " + JSON.stringify(tweets))
         response.tweets = tweets;
         res.json(response);
 
@@ -155,7 +159,6 @@ function checkTweetCache(_id, _page, res){
                 tweets[tweet] = data[tweet].text;
             } 
         }
-            console.log("R2 " + JSON.stringify(tweets))
             response.tweets = tweets;
             success = tweetsCache.set( _id, response, 10000 );  
     };
@@ -164,5 +167,9 @@ function checkTweetCache(_id, _page, res){
     twitter.getUserTimeline({ screen_name: _id, count: '20',
     exclude_replies: true, include_rts: false}, error, success);
 });
+function shuffle(o){
+    for(var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
+    return o;
+}
 
    

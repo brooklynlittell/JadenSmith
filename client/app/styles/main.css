@@ -16,13 +16,16 @@
 }
 .poster .text {
   width: 600px;
+  height: 550px;
   position: absolute;
   padding: 20px;
+  display: table;
 }
 .poster .text p {
   text-shadow: black 1px 1px 5px;
   font-weight: bold;
   word-wrap: break-word;
+  display: table-cell;
 }
 .poster .author {
   text-align: right;
