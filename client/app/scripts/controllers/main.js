@@ -11,8 +11,8 @@
 var app = angular.module('jadenSmithApp');
 
 
-app.controller('MainCtrl', ['$scope','$rootScope','$resource','$location','$window','getTweets','getImages','generateImage', 
-    function ($scope, $rootScope, $resource, $location, $window, getTweets, getImages, generateImage) {
+app.controller('MainCtrl', ['$scope','$rootScope','$route', '$resource','$location','$window','getTweets','getImages','generateImage', 
+    function ($scope, $rootScope, $route, $resource, $location, $window, getTweets, getImages, generateImage) {
         $scope.username = '';
         $scope.justify = "center";
         $scope.isLoading = "ui teal basic button";
@@ -28,21 +28,31 @@ app.controller('MainCtrl', ['$scope','$rootScope','$resource','$location','$wind
         $scope.userNotFound = false;        
         $scope.showImages = false;
         $scope.imageStatusEnd = false;
+        $scope.canvas = document.createElement('canvas');
 
 
         $scope.init = function(){
-        $scope.imagesLock = true;
-        getImages().then(function(data){
-            $rootScope.image = $rootScope.image.concat(data);
-            console.log("Found images");
-            var urlParam = $location.search().username;
-            if(urlParam){
-                $scope.username = urlParam;
-                $scope.onSearch();
-                }  
-            });
-        $scope.imagesLock = false;
+        if($rootScope.image.length < 1){
+            $scope.imagesLock = true;
+            getImages().then(function(data){
+                $rootScope.image = $rootScope.image.concat(data);
+                console.log("Found images");
+                var urlParam = $location.search().username;
+                if(urlParam){
+                    $scope.username = urlParam;
+                    $scope.onSearch();
+                    }  
+                });
+            $scope.imagesLock = false;            
         }
+        else {
+            var urlParam = $location.search().username;
+                if(urlParam){
+                    $scope.username = urlParam;
+                    $scope.onSearch();
+                }
+             }
+         }
         $scope.onSearch = function() {
             $scope.tweets = null;
             $scope.imageList = [];
@@ -62,6 +72,9 @@ app.controller('MainCtrl', ['$scope','$rootScope','$resource','$location','$wind
                     console.log("Request handeled in " + $scope.timer + " milliseconds");   
                     return;      
                 }
+                if(tweets.length == 0){
+                    console.log("Url error");
+                }
                 $scope.userNotFound = false;        
                 $scope.tweets = tweets;
                 for (var tweet in tweets)
@@ -74,7 +87,7 @@ app.controller('MainCtrl', ['$scope','$rootScope','$resource','$location','$wind
             });
         };
         $scope.moreTweets = function(){
-            if (!$scope.tweetsLock) $scope.moreTweetsLock();
+            if (!$scope.tweetsLock && $scope.username) $scope.moreTweetsLock();
         }
 
         $scope.moreTweetsLock = function() {
@@ -91,9 +104,16 @@ app.controller('MainCtrl', ['$scope','$rootScope','$resource','$location','$wind
             $scope.imageList[index] = (generateImage($scope.imageList[index].tweet,  $scope.imageList[index].image, $scope.username, justify));
         };
         
-        $scope.onDownload = function(id) {
-            var dataURL = document.getElementById(id).toDataURL('image/png');
-            $window.open(dataURL, '_blank');
+        $scope.onDownload = function(index) {
+            var poster = document.getElementById("poster" + index)
+            angular.element(document).ready(function (){
+                html2canvas(poster, {
+                proxy: 'http://localhost:8080/',
+                onrendered: function(canvas) {
+                    $window.open(canvas.toDataURL('image/png'));                      
+                    }
+                });
+            });
         };
         $scope.newImage = function(index, tweet){
             $scope.timer = new Date();
@@ -103,7 +123,7 @@ app.controller('MainCtrl', ['$scope','$rootScope','$resource','$location','$wind
                     $scope.imagesLock = true;
                     console.log("No more images. Querying for more.");
                     getImages().then(function(data) {
-                        $rootScope.image = data;
+                        $rootScope.image.concat(data);
                         $scope.imageList[index] = (generateImage($scope.imageList[index].tweet,  $rootScope.image.pop(), $scope.username, $scope.justify));
                         $scope.afterImage(); 
                     });
@@ -123,7 +143,7 @@ app.controller('MainCtrl', ['$scope','$rootScope','$resource','$location','$wind
                     console.log("No more images. Querying for more.");
                     getImages().then(function(data) {
                         console.log("Found images");
-                        $rootScope.image = data;
+                        $rootScope.image.concat(data);
                         $scope.imageCount = 0;
                         $scope.drawImage(tweet);
                     });                    
@@ -143,6 +163,10 @@ app.controller('MainCtrl', ['$scope','$rootScope','$resource','$location','$wind
             $scope.showImages = true;
             $scope.imagesLock = false
         };
+        var lastRoute = $route.current;
+        $scope.$on('$locationChangeSuccess', function(event) {
+            $route.current = lastRoute;
+        });
     }
 ]);
 // Templates

@@ -3,6 +3,7 @@
     // set up ========================
     var express  = require('express');
     var app      = express();                               // create our app w/ express
+    var proxy = require('html2canvas-proxy');
 
     var morgan = require('morgan');             // log requests to the console (express4)
     var bodyParser = require('body-parser');    // pull information from HTML POST (express4)
@@ -27,7 +28,7 @@
     // listen (start app with node server.js) ======================================
     app.listen(8080);
     console.log("App listening on port 8080");
-
+    app.use('/', proxy());
     var totalCache = 0;
     var totalQueries = 0;
     // routes ======================================================================

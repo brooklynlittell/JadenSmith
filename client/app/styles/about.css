@@ -30,3 +30,12 @@
   word-wrap: break-word;
   font-size: 50px;
 }
+.posterAbout h1 {
+  font-size: 60px;
+}
+.posterAbout h3 {
+  font-size: 35px;
+}
+.posterAbout a {
+  color: white;
+}
