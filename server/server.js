@@ -4,6 +4,7 @@
     var express  = require('express');
     var app      = express();                               // create our app w/ express
     var proxy = require('html2canvas-proxy');
+    var path = require('path');
 
     var morgan = require('morgan');             // log requests to the console (express4)
     var bodyParser = require('body-parser');    // pull information from HTML POST (express4)
@@ -27,12 +28,53 @@
     app.use(cors());
 
     // listen (start app with node server.js) ======================================
-    app.listen(8080);
-    console.log("App listening on port 8080");
+    //app.listen(8080);
+    //console.log("App listening on port 8080");
     app.use('/', proxy());
     var totalCache = 0;
     var totalQueries = 0;
     // routes ======================================================================
+    
+    /**
+ * Development Settings
+ */
+if (app.get('env') === 'development') {
+    // This will change in production since we'll be using the dist folder
+    app.use(express.static(path.join(__dirname, '../client')));
+    // This covers serving up the index page
+    app.use(express.static(path.join(__dirname, '../client/.tmp')));
+    app.use(express.static(path.join(__dirname, '../client/app')));
+
+    // Error Handling
+    app.use(function(err, req, res, next) {
+        res.status(err.status || 500);
+        res.render('error', {
+            message: err.message,
+            error: err
+        });
+    });
+}
+
+/**
+ * Production Settings
+ */
+if (app.get('env') === 'production') {
+
+    // changes it to use the optimized version for production
+    app.use(express.static(path.join(__dirname, '/dist')));
+
+    // production error handler
+    // no stacktraces leaked to user
+    app.use(function(err, req, res, next) {
+        res.status(err.status || 500);
+        res.render('error', {
+            message: err.message,
+            error: {}
+        });
+    });
+}
+    
+    
     // api ---------------------------------------------------------------------
 
     // for debugging/monitoring purposes
@@ -172,4 +214,4 @@ function shuffle(o){
     return o;
 }
 
-   
+module.exports = app;

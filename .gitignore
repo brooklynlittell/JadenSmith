@@ -3,3 +3,5 @@ app.json
 data
 node_modules
 config.json
+
+server/dist
