@@ -1,19 +1,13 @@
 'use strict';
 var pageCount = 0;
 var lastUser = "";
-var lastCount;
 angular.module('jadenSmithApp')
-.factory('getTweets', ['$resource', '$q', function($resource, $q) {
-	return function(user) {
+.factory('getTweets', ['$resource', '$q','$rootScope', function($resource, $q, $rootScope) {
+	return function(user, reset) {
+		$rootScope.loaderClass = $rootScope.loaderClass.concat(" active");
 		var defer = $q.defer();
-		if(pageCount === lastCount){
-			console.log("stacking requests. doing nothing");
-			defer.resolve(null);
-            return defer.promise;
-		}
-		if(user != lastUser) pageCount = 0;
+		if(user != lastUser || reset) pageCount = 0;
 		lastUser = user;
-		lastCount = pageCount;
 		console.log("querying at " + "http://localhost:8080/api/tweets/" + user + "/" + pageCount);
 		return $resource("http://localhost:8080/api/tweets/" + user + "/" + pageCount).get()
 		.$promise.then(function(data) {
@@ -24,9 +18,11 @@ angular.module('jadenSmithApp')
 			if (tweets.length > 0 ){
 				pageCount++;
 			} 
-			console.log("Found " + tweets.length + " tweets ");
+			console.log("Found " + tweets.length + " tweets "); 
+			$rootScope.loaderClass = $rootScope.loaderClass.replace(" active", '');
 			return tweets;
 		}, function(error){
+			$rootScope.loaderClass = $rootScope.loaderClass.replace(" active", '');
 			console.log("User not found");
 		});
 	 };

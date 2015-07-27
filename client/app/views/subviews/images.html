@@ -4,11 +4,18 @@
 		<div image></div>
  	</div>
 </div>
+
+<br>
+<br>
+<button ng-click="toTop()" id = "bottomButton" class = "ui teal basic button"> Back to top </button>
 <div infinite-scroll="moreTweets()"></div>
 <br><br>
-<div class="ui negative message" ng-show = "imageStatusEnd">
+<div class="{{loaderClass}}"></div>
+<div class="ui negative message" ng-show="imageStatusEnd">
   <i class="close icon"></i>
   <div class="header">
     No More Tweets
   </div>
 </p></div>
+<br>
+<br>

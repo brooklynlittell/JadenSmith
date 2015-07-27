@@ -23,12 +23,14 @@ app.controller('MainCtrl', ['$scope','$rootScope','$route', '$resource','$locati
         $scope.tweetPage = 0;
         $scope.imageList = new Array();
 
-        $scope.userNotFound = false;        
+        $scope.userNotFound;        
         $scope.showImages = false;
         $scope.imageStatusEnd = false;
         $scope.canvas = document.createElement('canvas');
         $scope.image;
-
+        $rootScope.loaderClass = "ui centered inline loader";
+        var RESET = true;
+        var KEEP = false;
         $scope.init = function(){
         getImages().then(function(image){
         	$scope.image = image;
@@ -49,13 +51,14 @@ app.controller('MainCtrl', ['$scope','$rootScope','$route', '$resource','$locati
             $scope.isLoading = "ui loading button"
             console.log("Getting tweets");
             $scope.timer = new Date();
+            $scope.userNotFound = false;        
 
-            getTweets($scope.username).then(function(tweets){
+            getTweets($scope.username, RESET).then(function(tweets){
                 if(!tweets || tweets.length === 0){
-        			userNotFound();
+                	console.log("here")
+        			$scope.notFound();
                     return;      
                 }
-                $scope.userNotFound = false;        
                 $scope.tweets = tweets;
                 for (var tweet in $scope.tweets);
                 {
@@ -66,9 +69,10 @@ app.controller('MainCtrl', ['$scope','$rootScope','$route', '$resource','$locati
             });
         };
         $scope.moreTweets = function() {
-            getTweets($scope.username).then(function(tweets){
+        	if($scope.userNotFound || $scope.imageStatusEnd ) return;
+            getTweets($scope.username, KEEP).then(function(tweets){
                 $scope.tweets = $scope.tweets.concat(tweets);
-                $scope.imageStatusEnd = !tweets || tweets === 0 ? true : false;
+                $scope.imageStatusEnd = !tweets || tweets.length === 0 ? true : false;
                 for (var tweet in tweets) $scope.getImage(tweets[tweet]);
             });
         };
@@ -114,14 +118,20 @@ app.controller('MainCtrl', ['$scope','$rootScope','$route', '$resource','$locati
             $scope.isLoading = "ui teal basic button";
             $scope.showImages = true;
         };
-        $scope.userNotFound = function(){
+        $scope.notFound = function(){
 	        $scope.timer = new Date() - $scope.timer;
 	        $scope.userNotFound = true;
 	        $scope.isLoading = "ui teal basic button";
 	        $scope.errorMessage = "Twitter account " + $scope.username + " not found";
-	        $scope.errorImage = getImage();
+	        getImages().then(function(image){
+	        	$scope.errorImage = image;
+	        	console.log("Request handeled in " + $scope.timer + " milliseconds"); 
+	        });
 	        $scope.tweets = "";
-	        console.log("Request handeled in " + $scope.timer + " milliseconds"); 
+        }
+        $scope.toTop = function(){
+        	console.log("hreer")
+        	$window.scrollTo(0,0);
         }
     }
 ]);
