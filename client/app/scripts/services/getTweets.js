@@ -6,8 +6,8 @@ angular.module('jadenSmithApp')
 	return function(user) {
 		if(user != lastUser) pageCount = 0;
 		lastUser = user;
-		console.log("querying at " + "http://localhost:8080/api/tweets/" + user + "/" + pageCount);
-		return $resource("http://localhost:8080/api/tweets/" + user + "/" + pageCount).get()
+		console.log("querying at " + "/api/tweets/" + user + "/" + pageCount);
+		return $resource("/api/tweets/" + user + "/" + pageCount).get()
 		.$promise.then(function(data) {
 			console.log("Fetching tweets for " + user);
 			var tweets = Object.keys(data.tweets).map(function (key){
