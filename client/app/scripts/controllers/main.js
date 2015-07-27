@@ -130,7 +130,6 @@ app.controller('MainCtrl', ['$scope','$rootScope','$route', '$resource','$locati
 	        $scope.tweets = "";
         }
         $scope.toTop = function(){
-        	console.log("hreer")
         	$window.scrollTo(0,0);
         }
     }
