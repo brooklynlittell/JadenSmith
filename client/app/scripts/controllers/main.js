@@ -23,7 +23,7 @@ app.controller('MainCtrl', ['$scope','$rootScope','$route', '$resource','$locati
         $scope.tweetPage = 0;
         $scope.imageList = new Array();
 
-        $scope.userNotFound = false;        
+        $scope.userNotFound;        
         $scope.showImages = false;
         $scope.imageStatusEnd = false;
         $scope.canvas = document.createElement('canvas');
@@ -49,13 +49,13 @@ app.controller('MainCtrl', ['$scope','$rootScope','$route', '$resource','$locati
             $scope.isLoading = "ui loading button"
             console.log("Getting tweets");
             $scope.timer = new Date();
+            $scope.userNotFound = false;        
 
             getTweets($scope.username).then(function(tweets){
                 if(!tweets || tweets.length === 0){
-        			userNotFound();
+        			$scope.notFound();
                     return;      
                 }
-                $scope.userNotFound = false;        
                 $scope.tweets = tweets;
                 for (var tweet in $scope.tweets);
                 {
@@ -66,6 +66,7 @@ app.controller('MainCtrl', ['$scope','$rootScope','$route', '$resource','$locati
             });
         };
         $scope.moreTweets = function() {
+        	if($scope.userNotFound) return;
             getTweets($scope.username).then(function(tweets){
                 $scope.tweets = $scope.tweets.concat(tweets);
                 $scope.imageStatusEnd = !tweets || tweets === 0 ? true : false;
@@ -114,14 +115,16 @@ app.controller('MainCtrl', ['$scope','$rootScope','$route', '$resource','$locati
             $scope.isLoading = "ui teal basic button";
             $scope.showImages = true;
         };
-        $scope.userNotFound = function(){
+        $scope.notFound = function(){
 	        $scope.timer = new Date() - $scope.timer;
 	        $scope.userNotFound = true;
 	        $scope.isLoading = "ui teal basic button";
 	        $scope.errorMessage = "Twitter account " + $scope.username + " not found";
-	        $scope.errorImage = getImage();
+	        getImages().then(function(image){
+	        	$scope.errorImage = image;
+	        	console.log("Request handeled in " + $scope.timer + " milliseconds"); 
+	        });
 	        $scope.tweets = "";
-	        console.log("Request handeled in " + $scope.timer + " milliseconds"); 
         }
     }
 ]);
