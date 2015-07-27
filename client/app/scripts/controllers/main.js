@@ -28,7 +28,9 @@ app.controller('MainCtrl', ['$scope','$rootScope','$route', '$resource','$locati
         $scope.imageStatusEnd = false;
         $scope.canvas = document.createElement('canvas');
         $scope.image;
-
+        $rootScope.loaderClass = "ui centered inline loader";
+        var RESET = true;
+        var KEEP = false;
         $scope.init = function(){
         getImages().then(function(image){
         	$scope.image = image;
@@ -51,8 +53,9 @@ app.controller('MainCtrl', ['$scope','$rootScope','$route', '$resource','$locati
             $scope.timer = new Date();
             $scope.userNotFound = false;        
 
-            getTweets($scope.username).then(function(tweets){
+            getTweets($scope.username, RESET).then(function(tweets){
                 if(!tweets || tweets.length === 0){
+                	console.log("here")
         			$scope.notFound();
                     return;      
                 }
@@ -66,10 +69,10 @@ app.controller('MainCtrl', ['$scope','$rootScope','$route', '$resource','$locati
             });
         };
         $scope.moreTweets = function() {
-        	if($scope.userNotFound) return;
-            getTweets($scope.username).then(function(tweets){
+        	if($scope.userNotFound || $scope.imageStatusEnd ) return;
+            getTweets($scope.username, KEEP).then(function(tweets){
                 $scope.tweets = $scope.tweets.concat(tweets);
-                $scope.imageStatusEnd = !tweets || tweets === 0 ? true : false;
+                $scope.imageStatusEnd = !tweets || tweets.length === 0 ? true : false;
                 for (var tweet in tweets) $scope.getImage(tweets[tweet]);
             });
         };
@@ -125,6 +128,10 @@ app.controller('MainCtrl', ['$scope','$rootScope','$route', '$resource','$locati
 	        	console.log("Request handeled in " + $scope.timer + " milliseconds"); 
 	        });
 	        $scope.tweets = "";
+        }
+        $scope.toTop = function(){
+        	console.log("hreer")
+        	$window.scrollTo(0,0);
         }
     }
 ]);
