@@ -9,7 +9,5 @@
  */
 angular.module('jadenSmithApp')
 .controller('AboutCtrl', ['$scope', function($scope) {
-    var path = '../../images/'
-    $scope.brandon = path + 'brandon.png';
-    $scope.jen = path + 'jen.jpg';
+    // Nothing to see here...
 }]);
