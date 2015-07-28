@@ -31,6 +31,8 @@ app.controller('MainCtrl', ['$scope','$rootScope','$route', '$resource','$locati
         $rootScope.loaderClass = "ui centered inline loader";
         var RESET = true;
         var KEEP = false;
+        $scope.tweetsLock = false;
+
         $scope.init = function(){
         getImages().then(function(image){
         	$scope.image = image;
@@ -52,25 +54,31 @@ app.controller('MainCtrl', ['$scope','$rootScope','$route', '$resource','$locati
             console.log("Getting tweets");
             $scope.timer = new Date();
             $scope.userNotFound = false;        
-
+            $scope.tweetsLock = true;
             getTweets($scope.username, RESET).then(function(tweets){
                 if(!tweets || tweets.length === 0){
-                	console.log("here")
         			$scope.notFound();
+        			$scope.tweetsLock = false;
                     return;      
                 }
                 $scope.tweets = tweets;
-                for (var tweet in $scope.tweets);
-                {
-                    $scope.getImage(tweets[tweet]);
-                }
+                angular.forEach($scope.tweets, function(value){
+	                $scope.getImage(value);
+	            	});
+                $scope.tweetsLock = false;
                 $scope.timer = new Date() - $scope.timer;
-                console.log("Request handeled in " + $scope.timer + " milliseconds");   
-            });
+                console.log("Request handeled in " + $scope.timer + " milliseconds");  
+                });
+                           	
+
+            
         };
         $scope.moreTweets = function() {
         	if($scope.userNotFound || $scope.imageStatusEnd ) return;
+        	$scope.tweetsLock = true;
+        	console.log("getting more tweets");
             getTweets($scope.username, KEEP).then(function(tweets){
+            	$scope.tweetsLock = false;
                 $scope.tweets = $scope.tweets.concat(tweets);
                 $scope.imageStatusEnd = !tweets || tweets.length === 0 ? true : false;
                 for (var tweet in tweets) $scope.getImage(tweets[tweet]);

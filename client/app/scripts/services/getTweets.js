@@ -17,10 +17,11 @@ angular.module('jadenSmithApp')
 			});
 			if (tweets.length > 0 ){
 				pageCount++;
+				console.log("Found " + tweets.length + " tweets "); 
+				$rootScope.loaderClass = $rootScope.loaderClass.replace(" active", '');
+				return tweets
 			} 
-			console.log("Found " + tweets.length + " tweets "); 
-			$rootScope.loaderClass = $rootScope.loaderClass.replace(" active", '');
-			return tweets;
+
 		}, function(error){
 			$rootScope.loaderClass = $rootScope.loaderClass.replace(" active", '');
 			console.log("User not found");
