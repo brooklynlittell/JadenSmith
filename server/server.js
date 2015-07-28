@@ -30,7 +30,7 @@
     // listen (start app with node server.js) ======================================
     //app.listen(8080);
     //console.log("App listening on port 8080");
-    //app.use('/', proxy());
+    app.use('/api/proxy', proxy());
     var totalCache = 0;
     var totalQueries = 0;
     // routes ======================================================================
