@@ -33,4 +33,24 @@ angular
         .otherwise({
             redirectTo: '/'
         });
+})
+.directive('images', function() {
+    return {
+        templateUrl: 'views/subviews/images.html'
+    };
+})
+.directive('image', function() {
+    return {
+        templateUrl: 'views/subviews/image.html'
+    };
+})
+.directive('editimage', function() {
+    return {
+        templateUrl: 'views/subviews/editImage.html'
+    };
+})
+.directive('errorMessage', function() {
+    return {
+        templateUrl: 'views/subviews/errorImage.html'
+    };
 });
