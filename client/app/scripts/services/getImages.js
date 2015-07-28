@@ -1,9 +1,16 @@
 'use strict';
 var images = new Array();
+var imageLock = false;
 angular.module('jadenSmithApp')
 .factory('getImages', ['$resource', '$q', function($resource, $q) {
-    return function(){
+    var getImage = function(){
         var defer = $q.defer();
+        if(imageLock){
+            console.log("image lock");
+            setTimeout(function(){
+                getImage();
+            }, 1000);
+        }
         if(images.length > 0){
             defer.resolve(images.pop());
             return defer.promise;
@@ -22,13 +29,18 @@ angular.module('jadenSmithApp')
                 newPageNumber++;
                 localStorage.setItem("pageNumber", newPageNumber.toString());
             }
+            imageLock = true;
             var imageList = $resource("http://localhost:8080/api/images?page=" + localStorage.getItem("pageNumber")).get();
             return imageList.$promise.then(function (result) {
                 images = images.concat(Object.keys(result.images).map(function(k){return result.images[k]}));
+                imageLock = false;
                 defer.resolve(images.pop());
                 return defer.promise;
             });               
         }
+    }
+    return function(){
+       return getImage();
     }
 }]);
 

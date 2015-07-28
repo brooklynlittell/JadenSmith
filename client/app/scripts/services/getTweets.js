@@ -19,7 +19,12 @@ angular.module('jadenSmithApp')
 				pageCount++;
 				console.log("Found " + tweets.length + " tweets "); 
 				$rootScope.loaderClass = $rootScope.loaderClass.replace(" active", '');
-				return tweets
+				return tweets;
+			}
+			else{
+				$rootScope.loaderClass = $rootScope.loaderClass.replace(" active", '');
+				return;
+			
 			} 
 
 		}, function(error){
