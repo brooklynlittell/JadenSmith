@@ -53,7 +53,6 @@ app.controller('MainCtrl', ['$scope','$rootScope','$route', '$resource','$locati
             $scope.imageList = [];
             $location.search('username', $scope.username);
             $scope.isLoading = "ui loading button"
-            console.log("Getting tweets");
             $scope.timer = new Date();
             $scope.userNotFound = false;        
             $scope.tweetsLock = true;
@@ -77,7 +76,6 @@ app.controller('MainCtrl', ['$scope','$rootScope','$route', '$resource','$locati
 
         var moreTweetsLock = false;
         $scope.moreTweets = function(){
-        	console.log("here");
         	if($scope.userNotFound || $scope.imageStatusEnd  ||  $scope.tweetsLock) return;
         	$scope.tweetsLock = true;
         	$scope.getMoreTweets();
