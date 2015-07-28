@@ -18,7 +18,6 @@ app.controller('MainCtrl', ['$scope','$rootScope','$route', '$resource','$locati
         $scope.align = "middle"
         $scope.isLoading = "ui teal basic button";
 
-        $scope.tweets = [];
         $scope.timer;
         $scope.tweetPage = 0;
         $scope.imageList = new Array();
@@ -31,10 +30,15 @@ app.controller('MainCtrl', ['$scope','$rootScope','$route', '$resource','$locati
         $rootScope.loaderClass = "ui centered inline loader";
         var RESET = true;
         var KEEP = false;
+        $scope.tweetsLock = false;
+
         $scope.init = function(){
-        getImages().then(function(image){
-        	$scope.image = image;
-        });
+        	$scope.tweetsLock = false;
+
+        	getImages().then(function(image){
+        		$scope.image = image;
+        		$scope.tweetsLock = true;
+        	});
         console.log("Found images");
         var urlParam = $location.search().username;
         if(urlParam){
@@ -49,32 +53,44 @@ app.controller('MainCtrl', ['$scope','$rootScope','$route', '$resource','$locati
             $scope.imageList = [];
             $location.search('username', $scope.username);
             $scope.isLoading = "ui loading button"
-            console.log("Getting tweets");
             $scope.timer = new Date();
             $scope.userNotFound = false;        
-
+            $scope.tweetsLock = true;
             getTweets($scope.username, RESET).then(function(tweets){
                 if(!tweets || tweets.length === 0){
-                	console.log("here")
         			$scope.notFound();
+        			$scope.tweetsLock = false;
                     return;      
                 }
-                $scope.tweets = tweets;
-                for (var tweet in $scope.tweets);
-                {
-                    $scope.getImage(tweets[tweet]);
-                }
+                angular.forEach(tweets, function(value){
+	                $scope.getImage(value);
+	            	});
+                $scope.tweetsLock = false;
                 $scope.timer = new Date() - $scope.timer;
-                console.log("Request handeled in " + $scope.timer + " milliseconds");   
-            });
+                console.log("Request handeled in " + $scope.timer + " milliseconds");  
+                });
+                           	
+
+            
         };
-        $scope.moreTweets = function() {
-        	if($scope.userNotFound || $scope.imageStatusEnd ) return;
+
+        var moreTweetsLock = false;
+        $scope.moreTweets = function(){
+        	if($scope.userNotFound || $scope.imageStatusEnd  ||  $scope.tweetsLock) return;
+        	$scope.tweetsLock = true;
+        	$scope.getMoreTweets();
+
+        }
+        $scope.getMoreTweets = function() {
+        	console.log("getting more tweets");
             getTweets($scope.username, KEEP).then(function(tweets){
-                $scope.tweets = $scope.tweets.concat(tweets);
-                $scope.imageStatusEnd = !tweets || tweets.length === 0 ? true : false;
-                for (var tweet in tweets) $scope.getImage(tweets[tweet]);
-            });
+            	$scope.tweetsLock = false;
+                $scope.imageStatusEnd = !tweets || tweets.length === 0;
+ 				angular.forEach(tweets, function(value){
+	                $scope.getImage(value);
+	            });     
+	            $scope.tweetsLock = false;       
+ 			});
         };
 
         $scope.onNewJustify = function(justify, index){
@@ -127,7 +143,6 @@ app.controller('MainCtrl', ['$scope','$rootScope','$route', '$resource','$locati
 	        	$scope.errorImage = image;
 	        	console.log("Request handeled in " + $scope.timer + " milliseconds"); 
 	        });
-	        $scope.tweets = "";
         }
         $scope.toTop = function(){
         	$window.scrollTo(0,0);

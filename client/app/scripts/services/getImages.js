@@ -3,14 +3,19 @@ var images = new Array();
 var imageLock = false;
 angular.module('jadenSmithApp')
 .factory('getImages', ['$resource', '$q', function($resource, $q) {
-    return function(){
+    var getImage = function(){
         var defer = $q.defer();
+        if(imageLock){
+            console.log("image lock");
+            setTimeout(function(){
+                getImage();
+            }, 1000);
+        }
         if(images.length > 0){
             defer.resolve(images.pop());
             return defer.promise;
         }
-        else if (!imageLock){
-            imageLock = true;
+        else{
             console.log("Searching for images");
             var refresh = (new Date().getTime() - localStorage.getItem("timestamp")) >= 900000;
             console.log("image page number  " + localStorage.getItem("pageNumber"));
@@ -24,8 +29,8 @@ angular.module('jadenSmithApp')
                 newPageNumber++;
                 localStorage.setItem("pageNumber", newPageNumber.toString());
             }
+            imageLock = true;
             var imageList = $resource("http://localhost:8080/api/images?page=" + localStorage.getItem("pageNumber")).get();
-            
             return imageList.$promise.then(function (result) {
                 images = images.concat(Object.keys(result.images).map(function(k){return result.images[k]}));
                 imageLock = false;
@@ -33,11 +38,9 @@ angular.module('jadenSmithApp')
                 return defer.promise;
             });               
         }
-        else{
-            defer.resolve(null);
-            return defer.promise;
-        }
- 
+    }
+    return function(){
+       return getImage();
     }
 }]);
 
