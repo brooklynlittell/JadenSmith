@@ -67,7 +67,7 @@
         console.log("searching for photos on " + query);
         ig.tag_media_recent(query, function(err, medias, pagination, remaining, limit) {
              if(err) { 
-                throw new Error(err); 
+                res.status(404).send('Error ' + err);
             }
              for(photo in medias){
                 imageUrls[photo] = medias[photo].images.standard_resolution.url;
@@ -127,7 +127,7 @@ function checkTweetCache(_id, _page, res){
     var twitter = new Twitter(conf);
     //pull in 100 tweets excluding rts and replies
     var error = function (err, response, body) {
-        res.status(404).send('Not found');
+        res.status(404).send('Error ' + err);
     };
 
     var success = function (data) {
@@ -139,6 +139,7 @@ function checkTweetCache(_id, _page, res){
             kLINK_DETECTION_REGEX = /(([a-z]+:\/\/)?(([a-z0-9\-]+\.)+([a-z]{2}|aero|arpa|biz|com|coop|edu|gov|info|int|jobs|mil|museum|name|nato|net|org|pro|travel|local|internal))(:[0-9]{1,5})?(\/[a-z0-9_\-\.~]+)*(\/([a-z0-9_\-\.]*)(\?[a-z0-9+_\-\.%=&amp;]*)?)?(#[a-zA-Z0-9!$&'()*+.=-_~:@/?]*)?)(\s+|$)/gi;
             data[tweet].text = data[tweet].text.replace(kLINK_DETECTION_REGEX, '');
                 // map text -> count (weight can be used later to pull good tweets)
+            if(data[tweet].text.length === 0 ) continue;
             tweets[tweet] = data[tweet].text;
             count++;
             if(count >= 4) break;
