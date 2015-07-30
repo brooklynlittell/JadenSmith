@@ -37,6 +37,13 @@
   width: 600px;
   padding: 30px;
 }
+#bottomButton {
+  height: 4%;
+  position: fixed;
+  bottom: 5%;
+  left: 80%;
+  width: 130px;
+}
 .browsehappy {
   margin: 0.2em 0;
   background: #ccc;

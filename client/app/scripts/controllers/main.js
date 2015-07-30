@@ -18,92 +18,86 @@ app.controller('MainCtrl', ['$scope','$rootScope','$route', '$resource','$locati
         $scope.align = "middle"
         $scope.isLoading = "ui teal basic button";
 
-        $scope.tweets = [];
-        $rootScope.image = [];
         $scope.timer;
         $scope.tweetPage = 0;
         $scope.imageList = new Array();
 
-        $scope.tweetsLock = false;
-        $scope.imagesLock = false;
-        $scope.userNotFound = false;        
+        $scope.userNotFound;        
         $scope.showImages = false;
         $scope.imageStatusEnd = false;
         $scope.canvas = document.createElement('canvas');
-
+        $scope.image;
+        $rootScope.loaderClass = "ui centered inline loader";
+        var RESET = true;
+        var KEEP = false;
+        $scope.tweetsLock = false;
 
         $scope.init = function(){
-        if($rootScope.image.length < 1){
-            $scope.imagesLock = true;
-            getImages().then(function(data){
-                $rootScope.image = $rootScope.image.concat(data);
-                console.log("Found images");
-                var urlParam = $location.search().username;
-                if(urlParam){
-                    $scope.username = urlParam;
-                    $scope.onSearch();
-                    }  
-                });
-            $scope.imagesLock = false;            
+        	$scope.tweetsLock = false;
+
+        	getImages().then(function(image){
+        		$scope.image = image;
+        		$scope.tweetsLock = true;
+        	});
+        console.log("Found images");
+        var urlParam = $location.search().username;
+        if(urlParam){
+            $scope.username = urlParam;
+            $scope.onSearch();
+            }  
         }
-        else {
-            var urlParam = $location.search().username;
-                if(urlParam){
-                    $scope.username = urlParam;
-                    $scope.onSearch();
-                }
-             }
-         }
+
         $scope.onSearch = function() {
+
             $scope.tweets = null;
             $scope.imageList = [];
             $location.search('username', $scope.username);
             $scope.isLoading = "ui loading button"
-            console.log("Getting tweets");
             $scope.timer = new Date();
+            $scope.userNotFound = false;        
             $scope.tweetsLock = true;
-            getTweets($scope.username).then(function(tweets){
-                console.log(tweets);
+            getTweets($scope.username, RESET).then(function(tweets){
                 if(!tweets || tweets.length === 0){
-                    $scope.userNotFound = true;
-                    $scope.isLoading = "ui teal basic button";
-                    $scope.timer = new Date() - $scope.timer;
-                    $scope.errorMessage = "Twitter account " + $scope.username + " not found";
-                    $scope.errorImage = $rootScope.image.pop();
-                    $scope.tweets = "";
-                    console.log("Request handeled in " + $scope.timer + " milliseconds");   
+        			$scope.notFound();
+        			$scope.tweetsLock = false;
                     return;      
                 }
-                $scope.userNotFound = false;        
-                $scope.tweets = tweets;
-                for (var tweet in tweets)
-                {
-                    $scope.getImage(tweets[tweet]);
-                }
+                angular.forEach(tweets, function(value){
+	                $scope.getImage(value);
+	            	});
                 $scope.tweetsLock = false;
                 $scope.timer = new Date() - $scope.timer;
-                console.log("Request handeled in " + $scope.timer + " milliseconds");   
-            });
-        };
-        $scope.moreTweets = function(){
-            if (!$scope.tweetsLock && $scope.username) $scope.moreTweetsLock();
-        }
+                console.log("Request handeled in " + $scope.timer + " milliseconds");  
+                });
+                           	
 
-        $scope.moreTweetsLock = function() {
-            $scope.tweetsLock = true;
-            getTweets($scope.username).then(function(tweets){
-                $scope.tweets = $scope.tweets.concat(tweets);
-                $scope.imageStatusEnd = tweets.length === 0 ? true : false;
-                for (var tweet in tweets) $scope.getImage(tweets[tweet]);
-                $scope.tweetsLock = false;
-            });
+            
+        };
+
+        var moreTweetsLock = false;
+        $scope.moreTweets = function(){
+        	if($scope.userNotFound || $scope.imageStatusEnd  ||  $scope.tweetsLock) return;
+        	$scope.tweetsLock = true;
+        	$scope.getMoreTweets();
+
+        }
+        $scope.getMoreTweets = function() {
+        	console.log("getting more tweets");
+            getTweets($scope.username, KEEP).then(function(tweets){
+            	$scope.tweetsLock = false;
+                $scope.imageStatusEnd = !tweets || tweets.length === 0;
+ 				angular.forEach(tweets, function(value){
+	                $scope.getImage(value);
+	            });     
+	            $scope.tweetsLock = false;       
+ 			});
         };
 
         $scope.onNewJustify = function(justify, index){
             $scope.imageList[index] = (generateImage($scope.imageList[index].tweet,  $scope.imageList[index].image, $scope.username, justify, $scope.align));
         };
         $scope.onNewAlign = function(align, index){
-            $scope.imageList[index] = (generateImage($scope.imageList[index].tweet,  $scope.imageList[index].image, $scope.username, $scope.justify, align));
+            $scope.imageList[index] = (generateImage($scope.imageList[index].tweet, $scope.imageList[index].image, $scope.username, $scope.justify, align));
         }
         $scope.onDownload = function(index) {
             var poster = document.getElementById("poster" + index)
@@ -120,53 +114,38 @@ app.controller('MainCtrl', ['$scope','$rootScope','$route', '$resource','$locati
         $scope.newImage = function(index, tweet){
             $scope.timer = new Date();
               // if we need to get more images
-            if ($rootScope.image.length < 1 ) {
-                if(!$scope.imagesLock){
-                    $scope.imagesLock = true;
-                    console.log("No more images. Querying for more.");
-                    getImages().then(function(data) {
-                        $rootScope.image = $rootScope.image.concat(data);
-                        $scope.imageList[index] = (generateImage($scope.imageList[index].tweet,  $rootScope.image.pop(), $scope.username, $scope.justify, $scope.align));
-                        $scope.afterImage(); 
-                    });
-                }
-            }
-            else {
-                $scope.imageList[index] = (generateImage($scope.imageList[index].tweet,  $rootScope.image.pop(), $scope.username, $scope.justify, $scope.align));
-                $scope.afterImage();
-            }            
-        }
+            getImages().then(function(image) {
+            	if(!image) return;
+                $scope.imageList[index] = (generateImage($scope.imageList[index].tweet, image, $scope.username, $scope.justify, $scope.align));
+                $scope.afterImage(); 
+            });
+        }    
         // pulls the next image, or queries for more images, if necessary
         $scope.getImage = function(tweet) {         
             // if we need to get more images
-            if ($rootScope.image.length < 1) {
-                if(!$scope.imagesLock){
-                    $scope.imagesLock = true;
-                    console.log("No more images. Querying for more.");
-                    getImages().then(function(data) {
-                        $rootScope.image = $rootScope.image.concat(data);
-                        $scope.imageCount = 0;
-                        $scope.drawImage(tweet);
-                    });                    
-                }
-            }
-            else {
-                $scope.drawImage(tweet);
-            }            
-        };
-        // actually calling the image generation class
-        $scope.drawImage = function(tweet){
-            $scope.imageList.push(generateImage(tweet, $rootScope.image.pop(), $scope.username, $scope.justify, $scope.align));
-            $scope.afterImage();
-        };
+            getImages().then(function(image) {
+            	if(!image) return;
+            	$scope.image = image
+            	$scope.imageList.push(generateImage(tweet, $scope.image, $scope.username, $scope.justify, $scope.align));
+            	$scope.afterImage();
+            });                    
+        }                 
         $scope.afterImage = function(){
             $scope.isLoading = "ui teal basic button";
             $scope.showImages = true;
-            $scope.imagesLock = false
         };
-        var lastRoute = $route.current;
-        $scope.$on('$locationChangeSuccess', function(event) {
-           // $route.current = lastRoute;
-        });
+        $scope.notFound = function(){
+	        $scope.timer = new Date() - $scope.timer;
+	        $scope.userNotFound = true;
+	        $scope.isLoading = "ui teal basic button";
+	        $scope.errorMessage = "Twitter account " + $scope.username + " not found";
+	        getImages().then(function(image){
+	        	$scope.errorImage = image;
+	        	console.log("Request handeled in " + $scope.timer + " milliseconds"); 
+	        });
+        }
+        $scope.toTop = function(){
+        	$window.scrollTo(0,0);
+        }
     }
 ]);
