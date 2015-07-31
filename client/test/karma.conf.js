@@ -32,8 +32,10 @@ module.exports = function(config) {
       'bower_components/angular-touch/angular-touch.js',
       'bower_components/semantic-ui/dist/semantic.js',
       'bower_components/color-thief/src/color-thief.js',
-      'bower_components/less/dist/less.js',
+      'bower_components/ngInfiniteScroll/build/ng-infinite-scroll.js',
+      'bower_components/html2canvas/dist/html2canvas.js',
       'bower_components/angular-mocks/angular-mocks.js',
+      'bower_components/less/dist/less.js',
       // endbower
       "app/scripts/**/*.js",
       "test/mock/**/*.js",

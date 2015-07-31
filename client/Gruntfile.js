@@ -22,7 +22,7 @@ module.exports = function (grunt) {
   // Configurable paths for the application
   var appConfig = {
     app: require('./bower.json').appPath || 'app',
-    dist: 'dist'
+    dist: '../server/dist'
   };
 
   // Define the configuration for all the tasks
@@ -51,6 +51,10 @@ module.exports = function (grunt) {
       styles: {
         files: ['<%= yeoman.app %>/styles/{,*/}*.css'],
         tasks: ['newer:copy:styles', 'autoprefixer']
+      },
+      less: {
+          files: ['<%= yeoman.app %>/styles/{,*/}*.less'],
+          tasks: ['newer:less']
       },
       gruntfile: {
         files: ['Gruntfile.js']
@@ -392,7 +396,13 @@ module.exports = function (grunt) {
         cwd: '<%= yeoman.app %>/styles',
         dest: '.tmp/styles/',
         src: '{,*/}*.css'
-      }
+      },
+      icons: {
+        cwd: 'bower_components/semantic-ui/dist/themes/default/assets/fonts',
+        src: '**/*',
+        dest: '<%= yeoman.dist %>/styles/themes/default/assets/fonts',
+        expand: true
+      },
     },
 
     // Run some tasks in parallel to speed up the build process
@@ -462,6 +472,7 @@ module.exports = function (grunt) {
     'concat',
     'ngAnnotate',
     'copy:dist',
+    'copy:icons',
     'cdnify',
     'cssmin',
     'uglify',

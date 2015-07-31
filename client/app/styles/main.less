@@ -1,4 +1,5 @@
 @posterSize: 600px;
+@posterSizeAbout: 400px;
 @margin: 20px;
 
 .poster {
@@ -11,26 +12,34 @@
     overflow: hidden;
     color: white;
     
+    &.about {
+        width: @posterSizeAbout;
+        height: @posterSizeAbout;
+        
+        display: inline-block;
+    }
+    
     img {
         position: absolute;
-        width: @posterSize;
-        height: @posterSize;
+        width: inherit;
+        height: inherit;
         left: 0;
     }
     
     .text {
-        width: @posterSize;
-        height: @posterSize - 50px;
+        width: inherit;
+        // TODO: Fix height for username placement
+        //height: inherit;
         position: absolute;
         padding: @margin;
-        display: table; 
+        //display: table; 
 
               
         p {
             text-shadow: black 1px 1px 5px;
             font-weight: bold;
             word-wrap: break-word;
-            display: table-cell; 
+            //display: table-cell; 
         }
     }
     .author{

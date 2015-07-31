@@ -30,7 +30,7 @@ angular.module('jadenSmithApp')
                 localStorage.setItem("pageNumber", newPageNumber.toString());
             }
             imageLock = true;
-            var imageList = $resource("http://localhost:8080/api/images?page=" + localStorage.getItem("pageNumber")).get();
+            var imageList = $resource("api/images?page=" + localStorage.getItem("pageNumber")).get();
             return imageList.$promise.then(function (result) {
                 images = images.concat(Object.keys(result.images).map(function(k){return result.images[k]}));
                 imageLock = false;

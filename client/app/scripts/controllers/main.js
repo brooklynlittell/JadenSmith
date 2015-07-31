@@ -100,10 +100,11 @@ app.controller('MainCtrl', ['$scope','$rootScope','$route', '$resource','$locati
             $scope.imageList[index] = (generateImage($scope.imageList[index].tweet, $scope.imageList[index].image, $scope.username, $scope.justify, align));
         }
         $scope.onDownload = function(index) {
-            var poster = document.getElementById("poster" + index)
+            //TODO: Change this document.get call
+            var poster = document.getElementById("poster" + index);
             angular.element(document).ready(function (){
                 html2canvas(poster, {
-                proxy: 'http://localhost:8080/',
+                proxy: '/api/proxy',
                 onrendered: function(canvas) {
                     $window.open(canvas.toDataURL('image/png'));   
                     console.log(canvas.toDataURL('image/png'));                   
@@ -149,4 +150,3 @@ app.controller('MainCtrl', ['$scope','$rootScope','$route', '$resource','$locati
         }
     }
 ]);
-

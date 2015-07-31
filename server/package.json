@@ -1,17 +1,24 @@
 {
-  "name": "Jaden-Smith",
-  "version": "0.0.0",
+  "name": "jadenSmith",
+  "version": "0.1.0",
   "description": "Inspiratinoal posters for your tweets",
-  "main": "server.js",
   "author": "jlamere and brandonlittell",
+  "private": true,
+  "scripts": {
+    "start": "NODE_ENV=production nodemon ./bin/www",
+    "test": "NODE_ENV=development nodemon ./bin/www"
+  },
   "dependencies": {
-    "body-parser": "~1.5.2",
+    "body-parser": "~1.13.2",
+    "cookie-parser": "~1.3.5",
     "cors": "2.7.1",
-    "express": "~4.7.2",
+    "debug": "~2.2.0",
+    "express": "~4.13.1",
     "html2canvas-proxy": "0.0.5",
     "instagram-node": "0.5.7",
-    "morgan": "~1.2.2",
+    "morgan": "~1.6.1",
     "node-cache": "3.0.0",
+    "serve-favicon": "~2.3.0",
     "twitter-node-client": "0.0.6"
   }
 }
