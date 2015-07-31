@@ -396,7 +396,13 @@ module.exports = function (grunt) {
         cwd: '<%= yeoman.app %>/styles',
         dest: '.tmp/styles/',
         src: '{,*/}*.css'
-      }
+      },
+      icons: {
+        cwd: 'bower_components/semantic-ui/dist/themes/default/assets/fonts',
+        src: '**/*',
+        dest: '<%= yeoman.dist %>/styles/themes/default/assets/fonts',
+        expand: true
+      },
     },
 
     // Run some tasks in parallel to speed up the build process
@@ -466,6 +472,7 @@ module.exports = function (grunt) {
     'concat',
     'ngAnnotate',
     'copy:dist',
+    'copy:icons',
     'cdnify',
     'cssmin',
     'uglify',
