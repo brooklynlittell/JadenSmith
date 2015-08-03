@@ -28,11 +28,10 @@
     app.use(cors());
 
     // listen (start app with node server.js) ======================================
-    //app.listen(8080);
-    //console.log("App listening on port 8080");
     app.use('/api/proxy', proxy());
     var totalCache = 0;
     var totalQueries = 0;
+    var lastTweet;
     // routes ======================================================================
     
     /**
@@ -128,29 +127,30 @@ if (app.get('env') === 'production') {
     data.caching = "Total Queries In Cache " + totalCache + " Total Queries  " + totalQueries;
     res.send(data);
   }) 
+
 function checkTweetCache(_id, _page, res){
   var response = new Object();
   value = tweetsCache.get( _id );
-    if ( value ){
+    if ( value && value[_page]){
         totalCache++;
         console.log("Tweet found in cache");
-        var newTweets = {};
-        var tweetCount = 0;
-        var page = _page * 5
-        for(tweet in value.tweets){
-            if (tweetCount > page && tweetCount <=parseInt((page) + 5)){
-                newTweets[tweet] = value.tweets[tweet];
-            }
-            if(tweetCount > parseInt((page) + 5)) break;
-            tweetCount++;
-        }
-        response.tweets = newTweets;
-        response.length = Object.keys(newTweets).length
-        console.log("Sending tweets");
+        response[_page] = value[_page]
         res.json(response);
         return true;
     }  
+    else{
+        return false;
+    }
 }
+  app.get('/api/tweets/:user', function(req, res) {
+    var _id  = req.params.user;
+    if(tweetsCache.get( _id )){
+        res.json(tweetsCache.get( _id ));
+    }
+    else{
+        res.status(404).send("Error " + err);
+    }
+  });
   app.get('/api/tweets/:user/:page', function(req, res) {
     var tweets = {};
     var _id  = req.params.user;
@@ -175,40 +175,41 @@ function checkTweetCache(_id, _page, res){
     var success = function (data) {
         // make response pretty
         data = JSON.parse(data);
-        var count = 0;
         for(tweet in data){
             // ignore tweets with a URL in it
             kLINK_DETECTION_REGEX = /(([a-z]+:\/\/)?(([a-z0-9\-]+\.)+([a-z]{2}|aero|arpa|biz|com|coop|edu|gov|info|int|jobs|mil|museum|name|nato|net|org|pro|travel|local|internal))(:[0-9]{1,5})?(\/[a-z0-9_\-\.~]+)*(\/([a-z0-9_\-\.]*)(\?[a-z0-9+_\-\.%=&amp;]*)?)?(#[a-zA-Z0-9!$&'()*+.=-_~:@/?]*)?)(\s+|$)/gi;
             data[tweet].text = data[tweet].text.replace(kLINK_DETECTION_REGEX, '');
                 // map text -> count (weight can be used later to pull good tweets)
             if(data[tweet].text.length === 0 ) continue;
+            if(parseInt(tweet) === data.length - 1) {
+                break;
+            }
             tweets[tweet] = data[tweet].text;
-            count++;
-            if(count >= 4) break;
+            response.lastTweet = data[tweet].id;
         }
-        response.tweets = tweets;
+        tweets = Object.keys(tweets).map(function(key){return tweets[key]})
+        response[_page] = tweets;
+        oldResponse = tweetsCache.get(_id);
+        if(oldResponse && !oldResponse[_page]){
+            oldResponse[_page] = response[_page];
+            oldResponse.lastTweet = response.lastTweet;
+        }
+        else{
+            oldResponse = response;
+        }
         res.json(response);
-
-        success = tweetsCache.set( _id, response, 10000 );
-        twitter.getUserTimeline({ screen_name: _id, count: '200',
-            exclude_replies: true, include_rts: false}, error, successPage2);
-        
-    };
-     var successPage2 = function (data) {
-        console.log("Got page 2 of tweets");
-        data = JSON.parse(data);
-        for(tweet in data){
-            if(data[tweet].text.indexOf("http") == -1){
-                tweets[tweet] = data[tweet].text;
-            } 
-        }
-            response.tweets = tweets;
-            success = tweetsCache.set( _id, response, 10000 );  
+        success = tweetsCache.set( _id, oldResponse, 10000 );
     };
 
     console.log("searching for tweets");
-    twitter.getUserTimeline({ screen_name: _id, count: '20',
-    exclude_replies: true, include_rts: false}, error, success);
+    if (tweetsCache.get(_id)){
+        twitter.getUserTimeline({ screen_name: _id, count: 20, max_id: tweetsCache.get(_id).lastTweet + 10,
+        exclude_replies: true, include_rts: false}, error, success);        
+    }
+    else{
+        twitter.getUserTimeline({ screen_name: _id, count: 20, 
+        exclude_replies: true, include_rts: false}, error, success);        
+    }
 });
 function shuffle(o){
     for(var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);

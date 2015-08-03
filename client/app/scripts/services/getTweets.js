@@ -11,16 +11,16 @@ angular.module('jadenSmithApp')
 		console.log("querying at " + "/api/tweets/" + user + "/" + pageCount);
 		return $resource("/api/tweets/" + user + "/" + pageCount).get()
 		.$promise.then(function(data) {
-			console.log("Fetching tweets for " + user);
-			var tweets = Object.keys(data.tweets).map(function (key){
-				return data.tweets[key];
-			});
+			var tweets = data[pageCount];
 			if (tweets.length > 0 ){
 				pageCount++;
 				console.log("Found " + tweets.length + " tweets "); 
 				$rootScope.loaderClass = $rootScope.loaderClass.replace(" active", '');
 				return tweets;
 			}
+			else if(pageCount == 1 || pageCount == 0){
+				return -1;
+			} 
 			else{
 				$rootScope.loaderClass = $rootScope.loaderClass.replace(" active", '');
 				return;

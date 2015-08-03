@@ -85,6 +85,7 @@ app.controller('MainCtrl', ['$scope','$rootScope','$route', '$resource','$locati
         	console.log("getting more tweets");
             getTweets($scope.username, KEEP).then(function(tweets){
             	$scope.tweetsLock = false;
+            	if(tweets === -1 ) moreTweets();
                 $scope.imageStatusEnd = !tweets || tweets.length === 0;
  				angular.forEach(tweets, function(value){
 	                $scope.getImage(value);
