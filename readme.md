@@ -4,7 +4,7 @@ JadenSmith
 Inspirational posters for your tweets
 
 Developed by jlamere and brandonlittell
-
+[Try it out here] (http://jadensmith.herokuapp.com/)
 Setup
 ---
 ```npm install``` and ```bower install``` client and server directories.
