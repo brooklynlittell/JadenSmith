@@ -21,13 +21,18 @@
 }
 .poster .text {
   width: inherit;
+  height: inherit;
   position: absolute;
-  padding: 20px;
+  vertical-align: middle;
+  display: table;
 }
 .poster .text p {
+  height: inherit;
+  width: inherit;
   text-shadow: black 1px 1px 5px;
   font-weight: bold;
   word-wrap: break-word;
+  display: table-cell;
 }
 .poster .author {
   text-align: right;
