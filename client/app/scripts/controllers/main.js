@@ -30,20 +30,16 @@ app.controller('MainCtrl', ['$scope','$rootScope','$route', '$resource','$locati
         $rootScope.loaderClass = "ui centered inline loader";
         var RESET = true;
         var KEEP = false;
-        $scope.tweetsLock = false;
 
         $scope.init = function(){
-        	$scope.tweetsLock = false;
-
         	getImages().then(function(image){
         		$scope.image = image;
-        		$scope.tweetsLock = true;
         	});
         console.log("Found images");
         var urlParam = $location.search().username;
         if(urlParam){
             $scope.username = urlParam;
-            $scope.onSearch();
+     //       $scope.onSearch();
             }  
         }
 
@@ -55,17 +51,14 @@ app.controller('MainCtrl', ['$scope','$rootScope','$route', '$resource','$locati
             $scope.isLoading = "ui loading button"
             $scope.timer = new Date();
             $scope.userNotFound = false;        
-            $scope.tweetsLock = true;
             getTweets($scope.username, RESET).then(function(tweets){
                 if(!tweets || tweets.length === 0){
         			$scope.notFound();
-        			$scope.tweetsLock = false;
                     return;      
                 }
                 angular.forEach(tweets, function(value){
 	                $scope.getImage(value);
 	            	});
-                $scope.tweetsLock = false;
                 $scope.timer = new Date() - $scope.timer;
                 console.log("Request handeled in " + $scope.timer + " milliseconds");  
                 });
@@ -73,24 +66,19 @@ app.controller('MainCtrl', ['$scope','$rootScope','$route', '$resource','$locati
 
             
         };
-
-        var moreTweetsLock = false;
         $scope.moreTweets = function(){
-        	if($scope.userNotFound || $scope.imageStatusEnd  ||  $scope.tweetsLock) return;
-        	$scope.tweetsLock = true;
+        	if($scope.userNotFound || $scope.imageStatusEnd) return;
         	$scope.getMoreTweets();
 
         }
         $scope.getMoreTweets = function() {
         	console.log("getting more tweets");
             getTweets($scope.username, KEEP).then(function(tweets){
-            	$scope.tweetsLock = false;
             	if(tweets === -1 ) moreTweets();
                 $scope.imageStatusEnd = !tweets || tweets.length === 0;
  				angular.forEach(tweets, function(value){
 	                $scope.getImage(value);
 	            });     
-	            $scope.tweetsLock = false;       
  			});
         };
 
