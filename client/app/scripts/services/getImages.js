@@ -18,7 +18,6 @@ angular.module('jadenSmithApp')
                 console.log("Page number reset");
             }
             else {
-                console.log('here')
                 var newPageNumber = localStorage.getItem("pageNumber");
                 newPageNumber++;
                 localStorage.setItem("pageNumber", newPageNumber.toString());

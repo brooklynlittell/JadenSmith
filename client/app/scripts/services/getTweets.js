@@ -12,20 +12,16 @@ angular.module('jadenSmithApp')
 		return $resource("/api/tweets/" + user + "/" + pageCount).get()
 		.$promise.then(function(data) {
 			var tweets = data[pageCount];
-			if (tweets.length > 0 ){
+			if (tweets && tweets.length > 0 ){
 				pageCount++;
 				console.log("Found " + tweets.length + " tweets "); 
 				$rootScope.loaderClass = $rootScope.loaderClass.replace(" active", '');
 				defer.resolve(tweets);
 				return defer.promise;
 			}
-			else if(pageCount == 1 || pageCount == 0){
-				return -1;
-			} 
 			else{
 				$rootScope.loaderClass = $rootScope.loaderClass.replace(" active", '');
-				return;
-			
+				return defer.promise;
 			} 
 
 		}, function(error){
