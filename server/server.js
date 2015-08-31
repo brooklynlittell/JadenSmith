@@ -176,6 +176,10 @@ function checkTweetCache(_id, _page, res){
         // make response pretty
         data = JSON.parse(data);
         for(tweet in data){
+            // deals with overlapping tweets between pages
+            if(_page > 0  && parseInt(tweet) === 0){
+                continue;
+            }
             // ignore tweets with a URL in it
             kLINK_DETECTION_REGEX = /(([a-z]+:\/\/)?(([a-z0-9\-]+\.)+([a-z]{2}|aero|arpa|biz|com|coop|edu|gov|info|int|jobs|mil|museum|name|nato|net|org|pro|travel|local|internal))(:[0-9]{1,5})?(\/[a-z0-9_\-\.~]+)*(\/([a-z0-9_\-\.]*)(\?[a-z0-9+_\-\.%=&amp;]*)?)?(#[a-zA-Z0-9!$&'()*+.=-_~:@/?]*)?)(\s+|$)/gi;
             data[tweet].text = data[tweet].text.replace(kLINK_DETECTION_REGEX, '');
@@ -185,7 +189,7 @@ function checkTweetCache(_id, _page, res){
                 break;
             }
             tweets[tweet] = data[tweet].text;
-            response.lastTweet = data[tweet].id;
+                response.lastTweet = data[tweet].id;
         }
         tweets = Object.keys(tweets).map(function(key){return tweets[key]})
         response[_page] = tweets;
@@ -203,7 +207,7 @@ function checkTweetCache(_id, _page, res){
 
     console.log("searching for tweets");
     if (tweetsCache.get(_id)){
-        twitter.getUserTimeline({ screen_name: _id, count: 20, max_id: tweetsCache.get(_id).lastTweet + 10,
+        twitter.getUserTimeline({ screen_name: _id, count: 20, max_id: tweetsCache.get(_id).lastTweet,
         exclude_replies: true, include_rts: false}, error, success);        
     }
     else{

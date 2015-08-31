@@ -21,7 +21,7 @@ angular.module('jadenSmithApp')
         imageObj.image = imageSrc;
         imageObj.author = authorText;
         imageObj.justify = justify;
-        
+        imageObj.alignment = align; 
         return imageObj;
     };
 }]);

@@ -3,7 +3,7 @@ var pageCount = 0;
 var lastUser = "";
 angular.module('jadenSmithApp')
 .factory('getTweets', ['$resource', '$q','$rootScope', function($resource, $q, $rootScope) {
-	return function(user, reset) {
+	var getMoreTweets = function(user, reset){
 		$rootScope.loaderClass = $rootScope.loaderClass.concat(" active");
 		var defer = $q.defer();
 		if(user != lastUser || reset) pageCount = 0;
@@ -12,24 +12,24 @@ angular.module('jadenSmithApp')
 		return $resource("/api/tweets/" + user + "/" + pageCount).get()
 		.$promise.then(function(data) {
 			var tweets = data[pageCount];
-			if (tweets.length > 0 ){
+			if (tweets && tweets.length > 0 ){
 				pageCount++;
 				console.log("Found " + tweets.length + " tweets "); 
 				$rootScope.loaderClass = $rootScope.loaderClass.replace(" active", '');
-				return tweets;
+				defer.resolve(tweets);
+				return defer.promise;
 			}
-			else if(pageCount == 1 || pageCount == 0){
-				return -1;
-			} 
 			else{
 				$rootScope.loaderClass = $rootScope.loaderClass.replace(" active", '');
-				return;
-			
+				return defer.promise;
 			} 
 
 		}, function(error){
 			$rootScope.loaderClass = $rootScope.loaderClass.replace(" active", '');
 			console.log("User not found");
-		});
+		});		
+	}
+	return function(user, reset) {
+		return getMoreTweets(user, reset);
 	 };
  }]);
