@@ -1,0 +1,80 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>JadenSmith</title>
+  <meta name="description" content="">
+  <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- build:css(.) styles/vendor.css -->
+  <link rel="stylesheet" href="bower_components/semantic-ui/dist/semantic.min.css" />
+  <!-- bower:css -->
+  <!-- endbower -->
+  <!-- endbuild -->
+  
+  <!-- build:css(.tmp) styles/index.css -->
+  <link rel="stylesheet" href="styles/main.css" />
+  <!-- bower:css -->
+  <!-- endbower -->
+  <!-- endbuild -->
+  
+  <!-- Latest compiled and minified CSS -->
+
+</head>
+<body ng-app="jadenSmithApp">
+  <!--[if lte IE 8]>
+    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+  <![endif]-->
+
+  <!-- Add your site or application content here -->
+
+<div class="ui secondary pointing menu">
+  <a class="item active">
+    Jaden Smith
+  </a>
+  <a class="item" href="#/">
+    Home
+  </a>
+  <a class="item" href="#/about">
+    About
+  </a>
+  </div>
+  <div class="ui container center aligned">
+    <div ng-view=""></div>
+  </div>
+  <div id ="footer">
+    <center>
+      jlamere &amp; brandonlittell 
+      <a href = "https://github.com/BrandonLittell/JadenSmith"><i class="github icon"></i></a>
+    </center>
+</div>
+
+<!-- build:js(.) scripts/vendor.js -->
+<!-- bower:js -->
+<script src="bower_components/jquery/dist/jquery.js"></script>
+<script src="bower_components/angular/angular.js"></script>
+<script src="bower_components/angular-animate/angular-animate.js"></script>
+<script src="bower_components/angular-cookies/angular-cookies.js"></script>
+<script src="bower_components/angular-resource/angular-resource.js"></script>
+<script src="bower_components/angular-route/angular-route.js"></script>
+<script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+<script src="bower_components/angular-touch/angular-touch.js"></script>
+<script src="bower_components/semantic-ui/dist/semantic.js"></script>
+<script src="bower_components/color-thief/src/color-thief.js"></script>
+<script src="bower_components/ngInfiniteScroll/build/ng-infinite-scroll.js"></script>
+<script src="bower_components/html2canvas/dist/html2canvas.js"></script>
+<!-- endbower -->
+<!-- endbuild -->
+
+
+<!-- build:js({.tmp,app}) scripts/scripts.js -->
+<script src="scripts/app.js"></script>
+<script src="scripts/controllers/main.js"></script>
+<script src="scripts/controllers/about.js"></script>
+<script src="scripts/services/getTweets.js"></script>
+<script src="scripts/services/getImages.js"></script>
+<script src="scripts/services/generateImage.js"></script>
+<script src="scripts/services/imageGenHelper.js"></script>
+<!-- endbuild -->
+</body>
+</html>

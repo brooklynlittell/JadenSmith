@@ -1,0 +1,9 @@
+*.DS_Store
+
+Procfile
+app.json
+data
+node_modules
+config.json
+
+server/dist

@@ -1,0 +1,10 @@
+<form class="ui left icon action input" data-ng-init="init()" ng-submit="onSearch(username)">
+	<input type="text" ng-model="username" placeholder="officialjaden">
+	<i class="twitter icon"></i>
+	<button class="{{isLoading}}" ng-model="searchButton">Search</button>
+</form>
+
+<div class="errorMessage" ng-show = "userNotFound">
+	<div error-message> </div>
+</div>
+<div images></div>
