@@ -4,12 +4,24 @@ JadenSmith
 Inspirational posters for your tweets
 
 Developed by jlamere and brandonlittell
+[Try it out here] (http://jadensmith.herokuapp.com/)
+Setup
+---
+```npm install``` and ```bower install``` client and server directories.
 
+Development Environment
+----
+1. Run ```grunt serve``` in client root.
+2. Run ```npm test``` in server root.
+3. Navigate to ```localhost:<Port Output from server>```
+
+Production Environment
+----
+1. Run ```grunt --force``` in client root.
+2. Run ```npm start``` in server root.
+3. Navigate to ```localhost:<Port Output from server>```
+
+Example Output
+----
 ![Tweet of Jaden]
-(https://lh3.googleusercontent.com/GH5GbQIaJHcIYIpbHp0CkvVwwlEkJTerHq2zIcFZcEc=w578-h400-no)
-
-![Tweet of Brandon]
-(https://lh3.googleusercontent.com/1_V_LAkn5SjT4czUVnC-h0VvD80fYv5akGQYHwf4Z1w=w578-h400-no)
-
-![Tweet of Jen]
-(https://lh3.googleusercontent.com/gMwQnj3sI5J3jQWk7MnB4PcK7-iB6cU5yb50h3Gi6t8=w578-h400-no)
+(https://lh3.googleusercontent.com/mGbUi6MvCpA4yL7KEfBm4MyKhOzA4jYKB3k-V4Udd9s=s400-no)

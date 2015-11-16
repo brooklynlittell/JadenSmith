@@ -22,7 +22,7 @@ module.exports = function (grunt) {
   // Configurable paths for the application
   var appConfig = {
     app: require('./bower.json').appPath || 'app',
-    dist: 'dist'
+    dist: '../server/dist'
   };
 
   // Define the configuration for all the tasks
@@ -51,6 +51,10 @@ module.exports = function (grunt) {
       styles: {
         files: ['<%= yeoman.app %>/styles/{,*/}*.css'],
         tasks: ['newer:copy:styles', 'autoprefixer']
+      },
+      less: {
+          files: ['<%= yeoman.app %>/styles/{,*/}*.less'],
+          tasks: ['newer:less']
       },
       gruntfile: {
         files: ['Gruntfile.js']
@@ -116,6 +120,22 @@ module.exports = function (grunt) {
           base: '<%= yeoman.dist %>'
         }
       }
+    },
+    
+    less: {
+     development: {
+         options: {
+             paths: ["app/styles"]
+         },
+         files: {"app/styles/main.css": "app/styles/main.less"}
+     },
+     production: {
+        options: {
+             paths: ["app/styles"],
+             cleancss: true
+        },
+        files: {"app/styles/main.css": "app/styles/main.less"}
+     }
     },
 
     // Make sure code styles are up to par and there are no obvious mistakes
@@ -376,7 +396,13 @@ module.exports = function (grunt) {
         cwd: '<%= yeoman.app %>/styles',
         dest: '.tmp/styles/',
         src: '{,*/}*.css'
-      }
+      },
+      icons: {
+        cwd: 'bower_components/semantic-ui/dist/themes/default/assets/fonts',
+        src: '**/*',
+        dest: '<%= yeoman.dist %>/styles/themes/default/assets/fonts',
+        expand: true
+      },
     },
 
     // Run some tasks in parallel to speed up the build process
@@ -402,6 +428,9 @@ module.exports = function (grunt) {
       }
     }
   });
+  
+  grunt.loadNpmTasks('grunt-contrib-less');
+  grunt.registerTask('default', ['less']);
 
 
   grunt.registerTask('serve', 'Compile then start a connect web server', function (target) {
@@ -443,6 +472,7 @@ module.exports = function (grunt) {
     'concat',
     'ngAnnotate',
     'copy:dist',
+    'copy:icons',
     'cdnify',
     'cssmin',
     'uglify',

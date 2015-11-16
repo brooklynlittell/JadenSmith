@@ -1,27 +1,20 @@
 {
-  "name": "jadenSmith",
-  "version": "0.0.1",
-  "description": "Inspirational posters for your tweets",
-  "main": "index.js",
+  "name"         : "Jaden-Smith",
+  "version"      : "0.0.0",
+  "description"  : "Inspiratinoal posters for your tweets",
+  "main"         : "server.js",
+  "author"       : "jlamere and brandonlittell",
   "scripts": {
-    "start": "node index.js"
+    "start": "node server.js"
   },
-  "dependencies": {
-    "express": "~4.9.x",
+  "dependencies" : {
+    "express"    : "~4.7.2",
+    "mongoose"   : "~3.6.2",
+    "morgan"     : "~1.2.2",
+    "body-parser": "~1.5.2",
+    "method-override": "~2.1.2",
     "instagram-node": "0.5.7",
-    "twitter-node-client": "0.0.6"
-  },
-  "engines": {
-    "node": "0.12.2"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/jlamere/JadenSmith"
-  },
-  "keywords": [
-    "node",
-    "twitter",
-    "express"
-  ],
-  "license": "MIT"
+    "twitter-node-client": "0.0.6",
+    "cors": "2.7.1"
+    }
 }
