@@ -17,6 +17,7 @@ p {
 }
 
 .posterContainer {
+    position: relative;
     display: block;
     width: @posterSize;
     padding: 0;
@@ -27,7 +28,31 @@ p {
     overflow: hidden;
     
     .editControls {
+        position: relative;
         background: #ddd;
+
+        div {
+            display: inline-block;
+            padding: 0;
+            .button:last-of-type {
+                margin: 0;
+            }
+        }
+        div.left {
+            position: absolute;
+            left: 0;
+        }
+        div.center {
+            margin: 0 auto;
+
+            .ui.buttons:after {
+                display:none;
+            }
+        }
+        div.right {
+            position: absolute;
+            right: 0;
+        }
     }
 }
 

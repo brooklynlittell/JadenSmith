@@ -1,29 +1,35 @@
-<button class="circular ui icon button" ng-click="newImage($index, tweet.tweet)">
-  <i class="random icon"></i>
-</button>
-
-<div class="ui buttons">
-	<button class="ui icon button" ng-click="onNewJustify('left', $index)">  
-		<i class="align left icon"></i>
-	</button>
-	<button class="ui icon button" ng-click="onNewJustify('center', $index)">  
-		<i class="align center icon"></i>
-	</button>
-	<button class="ui icon button" ng-click="onNewJustify('right', $index)"> 
-		<i class="align right icon"></i>
-	</button>
+<div class="left">
+    <button class="ui icon button" ng-click="newImage($index, tweet.tweet)">
+        <i class="random icon"></i>&nbsp;Shuffle Image
+    </button>
 </div>
 
-<div class="ui buttons">
-	<button class="ui icon button" ng-click="onNewAlign('text-top', $index)">  
-		<i class="angle up icon"></i>
-	</button>
-	<button class="ui icon button" ng-click="onNewAlign('middle', $index)">  
-		<i class="angle down icon"></i>
-	</button>
+<div class="center">
+    <div class="ui buttons center">
+        <button class="ui icon button" ng-click="onNewJustify('left', $index)">  
+            <i class="align left icon"></i>
+        </button>
+        <button class="ui icon button" ng-click="onNewJustify('center', $index)">  
+            <i class="align center icon"></i>
+        </button>
+        <button class="ui icon button" ng-click="onNewJustify('right', $index)"> 
+            <i class="align right icon"></i>
+        </button>
+    </div>
+
+    <div class="ui buttons">
+        <button class="ui icon button" ng-click="onNewAlign('text-top', $index)">  
+            <i class="angle up icon"></i>
+        </button>
+        <button class="ui icon button" ng-click="onNewAlign('middle', $index)">  
+            <i class="angle down icon"></i>
+        </button>
+    </div>
 </div>
 
-<!--This button doesn't do anything yet-->
-<button class="circular ui icon button" ng-click="onDownload($index)">
-  <i class="download icon"></i>
-</button>
+<div class="right">
+    <!--This button doesn't do anything yet-->
+    <button class="ui icon button" ng-click="onDownload($index)">
+        <i class="download icon"></i>&nbsp;Save Image
+    </button>
+</div>
