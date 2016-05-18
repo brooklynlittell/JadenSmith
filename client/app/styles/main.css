@@ -17,7 +17,7 @@ p {
 }
 .posterContainer .editControls {
   position: relative;
-  background: #ddd;
+  background: #e0e1e2;
 }
 .posterContainer .editControls div {
   display: inline-block;
