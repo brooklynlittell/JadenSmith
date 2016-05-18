@@ -11,7 +11,7 @@ p {
   padding: 0;
   margin: 0 auto;
   margin-bottom: 20px;
-  border: #999 1px solid;
+  border: #e0e1e2 1px solid;
   border-radius: 5px;
   overflow: hidden;
 }
@@ -82,6 +82,9 @@ p {
   bottom: 0;
   width: 600px;
   padding: 30px;
+}
+.searchContainer {
+  margin-bottom: 20px;
 }
 #toTopButton {
   height: 60px;
